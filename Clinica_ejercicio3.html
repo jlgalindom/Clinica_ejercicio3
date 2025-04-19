@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clínica Gineco-Pediátrica</title>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #fefefe;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 1rem 0;
+      background-color: #fde7f0;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #b74b7f;
+    }
+    .container {
+      padding: 1rem;
+      max-width: 900px;
+      margin: auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+    .accordion-button {
+      background-color: #f3d9e3;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 1rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      padding: 0 1rem;
+      background-color: #fff4fa;
+      border-radius: 0 0 8px 8px;
+    }
+    .accordion-content.open {
+      padding: 0.5rem 1rem;
+    }
+    form label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    form input, form select, form textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    form button {
+      margin-top: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #d27b9c;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .success-message {
+      margin-top: 1rem;
+      color: green;
+      font-weight: bold;
+      display: none;
+    }
+    #chart-container {
+      height: 400px;
+      margin-top: 2rem;
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Clínica Gineco-Pediátrica</h1>
+    <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada Clínica" style="width:100%; max-width:600px; border-radius:12px;">
+  </header>
+
+  <div class="container">
+
+    <div class="card">
+      <h2>Especialidades Médicas</h2>
+
+      <button class="accordion-button">👩‍⚕️ Ginecología</button>
+      <div class="accordion-content">
+        Salud reproductiva, planificación familiar, anticoncepción, estudios Papanicolaou, chequeos ginecológicos.
+      </div>
+
+      <button class="accordion-button">🧐 Obstetricia</button>
+      <div class="accordion-content">
+        Control prenatal, ultrasonidos, educación perinatal, atención en embarazo de bajo y alto riesgo.
+      </div>
+
+      <button class="accordion-button">👶 Pediatría</button>
+      <div class="accordion-content">
+        Control del desarrollo infantil, vacunas, revisiones, prevención de enfermedades y orientación para madres/padres.
+      </div>
+
+      <button class="accordion-button">🩺 Medicina General</button>
+      <div class="accordion-content">
+        Valoración inicial, seguimiento a condiciones generales de salud, chequeos básicos y canalización a especialidades.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Agenda tu cita</h2>
+      <form id="formulario">
+        <label>Nombre completo</label>
+        <input name="Nombre completo" required />
+
+        <label>Teléfono</label>
+        <input name="Teléfono" required />
+
+        <label>Correo electrónico</label>
+        <input name="Correo electrónico" type="email" required />
+
+        <label>Sexo</label>
+        <select name="Sexo" required>
+          <option value="">Selecciona una opción</option>
+          <option>Femenino</option>
+          <option>Masculino</option>
+          <option>Otro</option>
+        </select>
+
+        <label>Especialidad</label>
+        <select name="Especialidad" required>
+          <option value="">Selecciona una especialidad</option>
+          <option>Ginecología</option>
+          <option>Obstetricia</option>
+          <option>Pediatría</option>
+          <option>Medicina General</option>
+        </select>
+
+        <label>Fecha</label>
+        <input name="Fecha" type="date" required />
+
+        <label>Hora</label>
+        <input name="Hora" type="time" required />
+
+        <label>Comentarios adicionales</label>
+        <textarea name="Comentarios adicionales"></textarea>
+
+        <input type="hidden" name="Fecha y hora de envío" id="timestamp"/>
+
+        <button type="submit">Agendar cita</button>
+        <div class="success-message" id="mensajeExito">👍 Gracias, tu cita ha sido agendada. ⏳ Redirigiendo al inicio... 🎉 Te contactaremos pronto.</div>
+      </form>
+    </div>
+
+    <div id="chart-container" class="card">
+      <h2>Estadísticas de Citas (Próximamente)</h2>
+      <!-- Aquí puede ir el gráfico dinámico conectado -->
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const accordionButtons = document.querySelectorAll('.accordion-button');
+      accordionButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const panel = btn.nextElementSibling;
+          panel.classList.toggle('open');
+          if (panel.style.maxHeight) {
+            panel.style.maxHeight = null;
+          } else {
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+          }
+        });
+      });
+
+      const formElement = document.getElementById('formulario');
+      if (formElement) {
+        formElement.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const now = new Date().toLocaleString();
+          document.getElementById('timestamp').value = now;
+          const formData = new FormData(form);
+          const scriptURL = 'https://script.google.com/macros/s/AKfycbx2h_pHVWcUPxajCHow42h4I0TXX54oorHykFqD4iokKI7Hwu9foAEDxoWlHOJCo9U/exec';
+
+          try {
+            const response = await fetch(scriptURL, { method: 'POST', body: formData });
+            const result = await response.text();
+            if (result === 'duplicate') {
+              alert('❌ Ya existe una cita registrada con ese nombre, fecha y hora.');
+              return;
+            }
+            document.getElementById('mensajeExito').style.display = 'block';
+            form.reset();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => document.getElementById('mensajeExito').style.display = 'none', 5000);
+            if (typeof drawChart === 'function') drawChart();
+          } catch (error) {
+            alert('Error al enviar. Intenta nuevamente.');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
