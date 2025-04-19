@@ -7,6 +7,10 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
+      const fechaInput = document.getElementById('fecha');
+      const today = new Date().toISOString().split('T')[0];
+      fechaInput.setAttribute('min', today);
+      fechaInput.value = today;
       const especialidadInput = document.getElementById('especialidad');
       const fechaInput = document.getElementById('fecha');
       const horaSelect = document.getElementById('hora');
@@ -75,7 +79,7 @@
           const now = new Date().toLocaleString();
           document.getElementById('timestamp').value = now;
           const formData = new FormData(form);
-          const scriptURL = 'https://script.google.com/macros/s/AKfycbxzLSj2cB0TDOdLleZDkiKpyWjoytMfg-6SjfLDflLFu6OewVN3mBdFj6mkCUqe-og/exec';
+          const scriptURL = 'https://script.google.com/macros/s/AKfycbwEL-VOrZk8gKTqr1YjIiFYkskiMY8D7YXnwoCN1MYt5BkB6Hfed7Rpj34bDWo4rp4/exec';
 
           try {
             const response = await fetch(scriptURL, { method: 'POST', body: formData });
@@ -215,7 +219,7 @@
         </select>
 
         <label for="fecha">Fecha</label>
-        <input name="Fecha" id="fecha" type="date" required>
+        <input name="Fecha" id="fecha" type="date" required min="">
 
         <label for="hora">Hora</label>
         <select name="Hora" id="hora" required>
