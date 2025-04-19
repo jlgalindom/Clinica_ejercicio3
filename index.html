@@ -4,18 +4,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Clínica Gineco-Pediátrica</title>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      background-color: #fefefe;
+      background-color: #fff8fa;
       color: #333;
+    }
+    nav {
+      background-color: #fde7f0;
+      padding: 1rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    nav a {
+      margin: 0 1rem;
+      text-decoration: none;
+      color: #b74b7f;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
     }
     header {
       text-align: center;
-      padding: 2rem 1rem 0;
+      padding: 2rem 1rem 1rem;
       background-color: #fde7f0;
+    }
+    header img {
+      width: 100%;
+      max-width: 600px;
+      border-radius: 12px;
+      margin-top: 1rem;
     }
     h1 {
       font-size: 2rem;
@@ -32,6 +54,23 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       padding: 1.5rem;
       margin: 1rem 0;
+    }
+    .accordion-button {
+      width: 100%;
+      text-align: left;
+      background-color: #f9e0ea;
+      border: none;
+      padding: 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+    .accordion-content {
+      display: none;
+      padding: 1rem;
+      background-color: #fdf6f9;
+      border-radius: 0 0 8px 8px;
     }
     form label {
       display: block;
@@ -64,12 +103,52 @@
   </style>
 </head>
 <body>
+  <nav>
+    <a href="#quienes">¿Quiénes somos?</a>
+    <a href="#especialidades">Especialidades</a>
+    <a href="#agendar">Agendar cita</a>
+  </nav>
+
   <header>
     <h1>Clínica Gineco-Pediátrica</h1>
+    <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada Clínica" />
   </header>
 
   <div class="container">
-    <div class="card">
+    <div id="quienes" class="card">
+      <h2>¿Quiénes somos?</h2>
+      <p>Clínica enfocada en salud ginecológica, obstétrica y pediátrica. Brindamos atención con calidez, ética profesional y trato humano, especialmente a mujeres, infancias y familias.</p>
+      <h3>Misión</h3>
+      <p>Brindar atención médica especializada, accesible y con enfoque integral a mujeres, gestantes e infancias.</p>
+      <h3>Visión</h3>
+      <p>Ser un referente en salud femenina e infantil, por nuestra excelencia médica, cercanía y compromiso con la comunidad.</p>
+      <h3>Valores</h3>
+      <ul>
+        <li>Ética profesional</li>
+        <li>Empatía</li>
+        <li>Diversidad</li>
+        <li>Honestidad</li>
+        <li>Responsabilidad</li>
+        <li>Enfoque de género y niñez</li>
+      </ul>
+    </div>
+
+    <div id="especialidades" class="card">
+      <h2>Especialidades Médicas</h2>
+      <button class="accordion-button">👩‍⚕️ Ginecología</button>
+      <div class="accordion-content">Salud reproductiva, planificación familiar, anticoncepción, estudios Papanicolaou, chequeos ginecológicos.</div>
+
+      <button class="accordion-button">🧐 Obstetricia</button>
+      <div class="accordion-content">Control prenatal, ultrasonidos, educación perinatal, atención en embarazo de bajo y alto riesgo.</div>
+
+      <button class="accordion-button">👶 Pediatría</button>
+      <div class="accordion-content">Control del desarrollo infantil, vacunas, revisiones, prevención de enfermedades y orientación para madres/padres.</div>
+
+      <button class="accordion-button">🩺 Medicina General</button>
+      <div class="accordion-content">Valoración inicial, seguimiento a condiciones generales de salud, chequeos básicos y canalización a especialidades.</div>
+    </div>
+
+    <div id="agendar" class="card">
       <h2>Agendar cita</h2>
       <form id="formulario">
         <label>Nombre completo</label>
@@ -141,6 +220,13 @@
           }
         });
       }
+
+      document.querySelectorAll('.accordion-button').forEach(button => {
+        button.addEventListener('click', () => {
+          const content = button.nextElementSibling;
+          content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        });
+      });
     });
   </script>
 </body>
