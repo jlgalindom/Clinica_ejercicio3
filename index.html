@@ -75,7 +75,7 @@
           const now = new Date().toLocaleString();
           document.getElementById('timestamp').value = now;
           const formData = new FormData(form);
-          const scriptURL = 'https://script.google.com/macros/s/AKfycbwEL-VOrZk8gKTqr1YjIiFYkskiMY8D7YXnwoCN1MYt5BkB6Hfed7Rpj34bDWo4rp4/exec';
+          const scriptURL = 'https://script.google.com/macros/s/AKfycbxzLSj2cB0TDOdLleZDkiKpyWjoytMfg-6SjfLDflLFu6OewVN3mBdFj6mkCUqe-og/exec';
 
           try {
             const response = await fetch(scriptURL, { method: 'POST', body: formData });
