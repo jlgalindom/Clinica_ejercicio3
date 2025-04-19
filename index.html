@@ -1,1 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clínica Gineco-Pediátrica</title>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #fff8fa; color: #333; }
+    nav { background-color: #fde7f0; padding: 1rem; text-align: center; position: sticky; top: 0; z-index: 1000; }
+    nav a { margin: 0 1rem; text-decoration: none; color: #b74b7f; font-weight: bold; transition: color 0.3s; }
+    nav a.active, nav a:hover { color: #7d2e5a; text-decoration: underline; }
+    header { text-align: center; padding: 2rem 1rem 1rem; background-color: #fde7f0; }
+    header img { width: 100%; max-width: 600px; border-radius: 12px; margin-top: 1rem; }
+    h1 { font-size: 2rem; color: #b74b7f; }
+    .container { padding: 1rem; max-width: 900px; margin: auto; }
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 1.5rem; margin: 1rem 0; }
+    .accordion-button { width: 100%; text-align: left; background-color: #f9e0ea; border: none; padding: 1rem; font-size: 1rem; cursor: pointer; border-radius: 8px; margin-top: 0.5rem; }
+    .accordion-content { display: block; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; padding: 1rem; background-color: #fdf6f9; border-radius: 0 0 8px 8px; }
+    form label { display: block; margin-top: 1rem; font-weight: bold; }
+    form input, form select, form textarea { width: 100%; padding: 0.5rem; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 8px; }
+    form button { margin-top: 1.5rem; padding: 0.75rem 1.5rem; background-color: #d27b9c; border: none; color: white; font-size: 1rem; border-radius: 8px; cursor: pointer; }
+    .success-message { margin-top: 1rem; color: green; font-weight: bold; display: none; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="#quienes">¿Quiénes somos?</a>
+  <a href="#especialidades">Especialidades</a>
+  <a href="#agendar">Agendar cita</a>
+</nav>
+<header>
+  <h1>Clínica Gineco-Pediátrica</h1>
+  <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada Clínica">
+</header>
+<div class="container">
+  <div id="quienes" class="card">
+    <h2>¿Quiénes somos?</h2>
+    <p>Clínica enfocada en salud ginecológica, obstétrica y pediátrica. Brindamos atención con calidez, ética profesional y trato humano, especialmente a mujeres, infancias y familias.</p>
+    <h3>Misión</h3>
+    <p>Brindar atención médica especializada, accesible y con enfoque integral a mujeres, gestantes e infancias.</p>
+    <h3>Visión</h3>
+    <p>Ser un referente en salud femenina e infantil, por nuestra excelencia médica, cercanía y compromiso con la comunidad.</p>
+    <h3>Valores</h3>
+    <ul>
+      <li>Ética profesional</li>
+      <li>Empatía</li>
+      <li>Diversidad</li>
+      <li>Honestidad</li>
+      <li>Responsabilidad</li>
+      <li>Enfoque de género y niñez</li>
+    </ul>
+  </div>
+  <div id="especialidades" class="card">
+    <h2>Especialidades Médicas</h2>
+    <button class="accordion-button">👩‍⚕️ Ginecología</button>
+    <div class="accordion-content">Salud reproductiva, planificación familiar, anticoncepción, estudios Papanicolaou, chequeos ginecológicos.</div>
+    <button class="accordion-button">🧐 Obstetricia</button>
+    <div class="accordion-content">Control prenatal, ultrasonidos, educación perinatal, atención en embarazo de bajo y alto riesgo.</div>
+    <button class="accordion-button">👶 Pediatría</button>
+    <div class="accordion-content">Control del desarrollo infantil, vacunas, revisiones, prevención de enfermedades y orientación para madres/padres.</div>
+    <button class="accordion-button">🩺 Medicina General</button>
+    <div class="accordion-content">Valoración inicial, seguimiento a condiciones generales de salud, chequeos básicos y canalización a especialidades.</div>
+  </div>
+  <div id="agendar" class="card">
+    <h2>Agendar cita</h2>
+    <form id="formulario">
+      <label>Nombre completo</label>
+      <input name="Nombre completo" required />
+      <label>Teléfono</label>
+      <input name="Teléfono" required />
+      <label>Correo electrónico</label>
+      <input name="Correo electrónico" type="email" required />
+      <label>Sexo</label>
+      <select name="Sexo">
+        <option value="">Selecciona</option>
+        <option value="Femenino">Femenino</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Otro">Otro</option>
+      </select>
+      <label>Especialidad</label>
+      <select name="Especialidad">
+        <option value="">Selecciona</option>
+        <option value="Ginecología">Ginecología</option>
+        <option value="Obstetricia">Obstetricia</option>
+        <option value="Pediatría">Pediatría</option>
+        <option value="Medicina General">Medicina General</option>
+      </select>
+      <label>Fecha</label>
+      <input name="Fecha" type="date" required />
+      <label>Hora</label>
+      <select name="Hora" required>
+        <option value="">Selecciona una hora</option>
+      </select>
+      <label>Comentarios adicionales</label>
+      <textarea name="Comentarios adicionales"></textarea>
+      <button type="submit">Enviar</button>
+      <div class="success-message" id="mensajeExito">✅ Cita agendada correctamente.</div>
+    </form>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.accordion-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const content = button.nextElementSibling;
+        const isOpen = content.style.maxHeight;
+        document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
+        if (!isOpen) {
+          content.style.maxHeight = content.scrollHeight + 'px';
+        }
+      });
+    });
+  });
 
+    const form = document.getElementById('formulario');
+    const horaSelect = form.querySelector('[name="Hora"]');
+    const especialidadInput = form.querySelector('[name="Especialidad"]');
+    const fechaInput = form.querySelector('[name="Fecha"]');
+
+    async function actualizarHorariosDisponibles() {
+      const fecha = fechaInput.value;
+      const especialidad = especialidadInput.value;
+      if (!fecha || !especialidad) return;
+
+      const response = await fetch(`https://script.google.com/macros/s/AKfycbzdbwU1ppCxt1KbyJeF5FKfV7FhSJTO4JO7WKJpiTkHaGBQlpaIhCxXN8qPiYpaOBg/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`);
+      const ocupados = await response.json();
+
+      const horarios = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00",
+        "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
+        "16:00", "16:30", "17:00", "17:30"];
+
+      horaSelect.innerHTML = '';
+      const oldInfo = horaSelect.parentNode.querySelector('.hora-msg');
+      if (oldInfo) oldInfo.remove();
+
+      if (horarios.every(h => ocupados.includes(h))) {
+        const option = document.createElement('option');
+        option.textContent = 'No hay horarios disponibles';
+        option.disabled = true;
+        option.selected = true;
+        horaSelect.innerHTML = '';
+        horaSelect.appendChild(option);
+        horaSelect.setAttribute('disabled', 'disabled');
+
+        const infoMsg = document.createElement('div');
+        infoMsg.textContent = 'No hay horarios disponibles para la fecha y especialidad seleccionadas.';
+        infoMsg.className = 'hora-msg';
+        infoMsg.style.color = '#b74b7f';
+        infoMsg.style.fontWeight = 'bold';
+        infoMsg.style.marginTop = '0.5rem';
+        horaSelect.parentNode.appendChild(infoMsg);
+        return;
+      }
+
+      horaSelect.removeAttribute('disabled');
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Selecciona una hora';
+      horaSelect.appendChild(defaultOption);
+
+      horarios.forEach(hora => {
+        if (!ocupados.includes(hora)) {
+          const option = document.createElement('option');
+          option.value = hora;
+          option.textContent = hora;
+          horaSelect.appendChild(option);
+        }
+      });
+    }
+
+    especialidadInput.addEventListener('change', actualizarHorariosDisponibles);
+    fechaInput.addEventListener('change', actualizarHorariosDisponibles);
+    const submitButton = form.querySelector('button[type="submit"]');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const timestamp = new Date().toLocaleString();
+    formData.append("Fecha y hora de envío", timestamp);
+
+    const requiredFields = ['Nombre completo', 'Teléfono', 'Correo electrónico', 'Sexo', 'Especialidad', 'Fecha', 'Hora'];
+    let valid = true;
+    requiredFields.forEach(name => {
+      const input = form.querySelector(`[name="${name}"]`);
+      if (!input.value) {
+        input.style.border = '2px solid red';
+        valid = false;
+      } else {
+        input.style.border = '';
+      }
+    });
+    if (!valid || horaSelect.disabled) {
+      if (horaSelect.disabled) {
+        alert('No puedes enviar el formulario sin seleccionar un horario válido.');
+        horaSelect.style.border = '2px solid red';
+      }
+      alert('Por favor completa todos los campos requeridos.');
+      return;
+    }
+
+    submitButton.disabled = true;
+    const loader = document.createElement('span');
+    loader.textContent = ' Enviando...';
+    loader.style.marginLeft = '10px';
+    loader.style.color = '#b74b7f';
+    submitButton.parentNode.appendChild(loader);
+
+    try {
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbxzzie-glxr-27GAO09kTVTUNFeANdZI-dBV9sUulQXlzy_sw7Nxc08bop8toS87Cw/exec';
+      const response = await fetch(scriptURL, { method: 'POST', body: formData });
+      const result = await response.text();
+      if (result === 'duplicate') {
+        alert('❌ Ya existe una cita con ese horario para la especialidad seleccionada.');
+      } else {
+        document.getElementById('mensajeExito').style.display = 'block';
+        form.reset();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => {
+          document.getElementById('mensajeExito').style.display = 'none';
+        }, 5000);
+      }
+    } catch (error) {
+      alert('Error al enviar. Intenta nuevamente.');
+    } finally {
+      submitButton.disabled = false;
+      loader.remove();
+    }
+  });
+</script>
+</body>
+</html>
