@@ -160,27 +160,33 @@ async function actualizarHorariosDisponibles() {
   const especialidad = especialidadInput.value;
   if (!fecha || !especialidad) return;
 
-  const response = await fetch(`https://script.google.com/macros/s/AKfycbz6hw8jd5iKNUD0aZjznWe7jt_fK8Gl8PsVwuj9hAijaj3m4kxptXe7BnXz7RP-cJE/exec"09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"];
+  const response = await fetch(`https://script.google.com/macros/s/AKfycbz6hw8jd5iKNUD0aZjznWe7jt_fK8Gl8PsVwuj9hAijaj3m4kxptXe7BnXz7RP-cJE/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`);
+  const ocupados = await response.json();
+
+  const horarios = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"];
 
   horaSelect.innerHTML = '';
+  const oldInfo = horaSelect.parentNode.querySelector('div');
+  if (oldInfo) oldInfo.remove();
+
   if (ocupados.length >= horarios.length) {
     const option = document.createElement('option');
     option.textContent = 'No hay horarios disponibles';
     option.disabled = true;
     option.selected = true;
     horaSelect.appendChild(option);
+    horaSelect.disabled = true;
+
     const infoMsg = document.createElement('div');
     infoMsg.textContent = 'No hay horarios disponibles para la fecha y especialidad seleccionadas.';
     infoMsg.style.color = '#b74b7f';
     infoMsg.style.fontWeight = 'bold';
     infoMsg.style.marginTop = '0.5rem';
     horaSelect.parentNode.appendChild(infoMsg);
-
-    $1
+    return;
   }
-  $1
-  const oldInfo = horaSelect.parentNode.querySelector('div');
-  if (oldInfo) oldInfo.remove();
+
+  horaSelect.disabled = false;
   const defaultOption = document.createElement('option');
   defaultOption.value = '';
   defaultOption.textContent = 'Selecciona una hora';
@@ -214,10 +220,16 @@ form.addEventListener('submit', async (e) => {
           } else {
             form.querySelector('[name="Fecha"]').style.border = '';
           }
+          } else {
+            form.querySelector('[name="Fecha"]').style.border = '';
+          }
           if (!hora) {
             alert('Por favor selecciona una hora válida.');
             form.querySelector('[name="Hora"]').style.border = '2px solid red';
             return;
+          } else {
+            form.querySelector('[name="Hora"]').style.border = '';
+          }
           } else {
             form.querySelector('[name="Hora"]').style.border = '';
           }
@@ -250,7 +262,7 @@ form.addEventListener('submit', async (e) => {
           submitButton.disabled = true;
           loader.style.display = 'inline';
 
-          const scriptURL = 'https://script.google.com/macros/s/AKfycby-zfvuir8rOgsYOm8829TDHv8lHh5inXVydbDxV_XbiV8p5kPVPij07Myl_0RijrU/exec';
+          const scriptURL = 'https://script.google.com/macros/s/AKfycbz6hw8jd5iKNUD0aZjznWe7jt_fK8Gl8PsVwuj9hAijaj3m4kxptXe7BnXz7RP-cJE/exec';
           const formData = new FormData(form);
           const timestamp = new Date().toLocaleString();
           formData.append("Fecha y hora de envío", timestamp);
