@@ -16,298 +16,211 @@
     .container { padding: 1rem; max-width: 900px; margin: auto; }
     .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 1.5rem; margin: 1rem 0; }
     .accordion-button { width: 100%; text-align: left; background-color: #f9e0ea; border: none; padding: 1rem; font-size: 1rem; cursor: pointer; border-radius: 8px; margin-top: 0.5rem; }
-    $1display: block; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; padding: 1rem; background-color: #fdf6f9; border-radius: 0 0 8px 8px; }
+    .accordion-content { display: block; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; padding: 1rem; background-color: #fdf6f9; border-radius: 0 0 8px 8px; }
     form label { display: block; margin-top: 1rem; font-weight: bold; }
     form input, form select, form textarea { width: 100%; padding: 0.5rem; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 8px; }
     form button { margin-top: 1.5rem; padding: 0.75rem 1.5rem; background-color: #d27b9c; border: none; color: white; font-size: 1rem; border-radius: 8px; cursor: pointer; }
     .success-message { margin-top: 1rem; color: green; font-weight: bold; display: none; }
   </style>
-  <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      const navLinks = document.querySelectorAll('nav a');
-      function onScroll() {
-        let scrollPosition = window.scrollY;
-        navLinks.forEach(link => {
-          const section = document.querySelector(link.getAttribute('href'));
-          if (section.offsetTop - 100 <= scrollPosition && section.offsetTop + section.offsetHeight > scrollPosition) {
-            link.classList.add('active');
-          } else {
-            link.classList.remove('active');
-          }
-        });
-      }
-      document.addEventListener('scroll', onScroll);
-    });
-  </script>
 </head>
 <body>
-  <nav>
-    <a href="#quienes">¿Quiénes somos?</a>
-    <a href="#especialidades">Especialidades</a>
-    <a href="#agendar">Agendar cita</a>
-  </nav>
-  <div class="success-message" id="mensajeExito" style="transition: opacity 0.5s ease-in-out; opacity: 0;background:#d4edda; border:1px solid #c3e6cb; padding:1rem; margin:1rem; color:#155724; font-weight:bold; border-radius:8px; text-align:center; display:none;">✅ Cita agendada correctamente.</div>
-$1
-    <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada Clínica" />
-  </header>
-  <div class="container">
-    <div id="quienes" class="card">
-      <h2>¿Quiénes somos?</h2>
-      <p>Clínica enfocada en salud ginecológica, obstétrica y pediátrica. Brindamos atención con calidez, ética profesional y trato humano, especialmente a mujeres, infancias y familias.</p>
-      <h3>Misión</h3>
-      <p>Brindar atención médica especializada, accesible y con enfoque integral a mujeres, gestantes e infancias.</p>
-      <h3>Visión</h3>
-      <p>Ser un referente en salud femenina e infantil, por nuestra excelencia médica, cercanía y compromiso con la comunidad.</p>
-      <h3>Valores</h3>
-      <ul>
-        <li>Ética profesional</li>
-        <li>Empatía</li>
-        <li>Diversidad</li>
-        <li>Honestidad</li>
-        <li>Responsabilidad</li>
-        <li>Enfoque de género y niñez</li>
-      </ul>
-    </div>
-    <div id="especialidades" class="card">
-      <h2>Especialidades Médicas</h2>
-      <button class="accordion-button">👩‍⚕️ Ginecología</button>
-      <div class="accordion-content">Salud reproductiva, planificación familiar, anticoncepción, estudios Papanicolaou, chequeos ginecológicos.</div>
-      <button class="accordion-button">🧐 Obstetricia</button>
-      <div class="accordion-content">Control prenatal, ultrasonidos, educación perinatal, atención en embarazo de bajo y alto riesgo.</div>
-      <button class="accordion-button">👶 Pediatría</button>
-      <div class="accordion-content">Control del desarrollo infantil, vacunas, revisiones, prevención de enfermedades y orientación para madres/padres.</div>
-      <button class="accordion-button">🩺 Medicina General</button>
-      <div class="accordion-content">Valoración inicial, seguimiento a condiciones generales de salud, chequeos básicos y canalización a especialidades.</div>
-    </div>
-    <div id="agendar" class="card">
-      <h2>Agendar cita</h2>
-      <form id="formulario">
-        <label>Nombre completo</label>
-        <input name="Nombre completo" required />
-        <label>Teléfono</label>
-        <input name="Teléfono" required />
-        <label>Correo electrónico</label>
-        <input name="Correo electrónico" type="email" required />
-        <label>Sexo</label>
-        <select name="Sexo">
-          <option value="">Selecciona</option>
-          <option value="Femenino">Femenino</option>
-          <option value="Masculino">Masculino</option>
-          <option value="Otro">Otro</option>
-        </select>
-        <label>Especialidad</label>
-        <select name="Especialidad">
-          <option value="">Selecciona</option>
-          <option value="Ginecología">Ginecología</option>
-          <option value="Obstetricia">Obstetricia</option>
-          <option value="Pediatría">Pediatría</option>
-          <option value="Medicina General">Medicina General</option>
-        </select>
-        <label>Fecha</label>
-        <input name="Fecha" type="date" id="fecha" required />
-        <label>Hora</label>
-<select name="Hora" required>
-  <option value="">Selecciona una hora</option>
-  <option value="09:00">09:00</option>
-  <option value="09:30">09:30</option>
-  <option value="10:00">10:00</option>
-  <option value="10:30">10:30</option>
-  <option value="11:00">11:00</option>
-  <option value="11:30">11:30</option>
-  <option value="12:00">12:00</option>
-  <option value="12:30">12:30</option>
-  <option value="13:00">13:00</option>
-  <option value="13:30">13:30</option>
-  <option value="14:00">14:00</option>
-  <option value="14:30">14:30</option>
-  <option value="15:00">15:00</option>
-  <option value="15:30">15:30</option>
-  <option value="16:00">16:00</option>
-  <option value="16:30">16:30</option>
-  <option value="17:00">17:00</option>
-  <option value="17:30">17:30</option>
-</select>
-        <label>Comentarios adicionales</label>
-        <textarea name="Comentarios adicionales"></textarea>
-        <button type="submit">Enviar</button>
-        
-      </form>
-    </div>
+<nav>
+  <a href="#quienes">¿Quiénes somos?</a>
+  <a href="#especialidades">Especialidades</a>
+  <a href="#agendar">Agendar cita</a>
+</nav>
+<header>
+  <h1>Clínica Gineco-Pediátrica</h1>
+  <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada Clínica">
+</header>
+<div class="container">
+  <div id="quienes" class="card">
+    <h2>¿Quiénes somos?</h2>
+    <p>Clínica enfocada en salud ginecológica, obstétrica y pediátrica. Brindamos atención con calidez, ética profesional y trato humano, especialmente a mujeres, infancias y familias.</p>
+    <h3>Misión</h3>
+    <p>Brindar atención médica especializada, accesible y con enfoque integral a mujeres, gestantes e infancias.</p>
+    <h3>Visión</h3>
+    <p>Ser un referente en salud femenina e infantil, por nuestra excelencia médica, cercanía y compromiso con la comunidad.</p>
+    <h3>Valores</h3>
+    <ul>
+      <li>Ética profesional</li>
+      <li>Empatía</li>
+      <li>Diversidad</li>
+      <li>Honestidad</li>
+      <li>Responsabilidad</li>
+      <li>Enfoque de género y niñez</li>
+    </ul>
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const fechaInput = document.getElementById('fecha');
-      if (fechaInput) {
-        const today = new Date().toISOString().split('T')[0];
-        fechaInput.setAttribute('min', today);
-      }
-      const form = document.getElementById('formulario');
-      const submitButton = form.querySelector('button[type="submit"]');
-      const loader = document.createElement('span');
-      loader.textContent = ' Enviando...';
-      loader.style.display = 'none';
-      loader.style.marginLeft = '10px';
-      loader.style.color = '#b74b7f';
-      submitButton.parentNode.appendChild(loader);
-
-      if (form) {
-        const horaSelect = form.querySelector('[name="Hora"]');
-const especialidadInput = form.querySelector('[name="Especialidad"]');
-const fechaInputWatch = form.querySelector('[name="Fecha"]');
-
-async function actualizarHorariosDisponibles() {
-  const fecha = fechaInputWatch.value;
-  const especialidad = especialidadInput.value;
-  if (!fecha || !especialidad) return;
-
-  const response = await fetch(`https://script.google.com/macros/s/AKfycbz6hw8jd5iKNUD0aZjznWe7jt_fK8Gl8PsVwuj9hAijaj3m4kxptXe7BnXz7RP-cJE/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`);
-  const ocupados = await response.json();
-
-  const horarios = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"];
-
-  horaSelect.innerHTML = '';
-  const oldInfo = horaSelect.parentNode.querySelector('div');
-  if (oldInfo) oldInfo.remove();
-
-  if (ocupados.length >= horarios.length) {
-    const option = document.createElement('option');
-    option.textContent = 'No hay horarios disponibles';
-    option.disabled = true;
-    option.selected = true;
-    horaSelect.appendChild(option);
-    horaSelect.disabled = true;
-
-    const infoMsg = document.createElement('div');
-    infoMsg.textContent = 'No hay horarios disponibles para la fecha y especialidad seleccionadas.';
-    infoMsg.style.color = '#b74b7f';
-    infoMsg.style.fontWeight = 'bold';
-    infoMsg.style.marginTop = '0.5rem';
-    horaSelect.parentNode.appendChild(infoMsg);
-    return;
-  }
-
-  horaSelect.disabled = false;
-  const defaultOption = document.createElement('option');
-  defaultOption.value = '';
-  defaultOption.textContent = 'Selecciona una hora';
-  horaSelect.appendChild(defaultOption);
-  horarios.forEach(hora => {
-    if (!ocupados.includes(hora)) {
-      const option = document.createElement('option');
-      option.value = hora;
-      option.textContent = hora;
-      horaSelect.appendChild(option);
-    }
-  });
-}
-
-especialidadInput.addEventListener('change', actualizarHorariosDisponibles);
-fechaInputWatch.addEventListener('change', actualizarHorariosDisponibles);
-
-form.addEventListener('submit', async (e) => {
-          const fecha = form.querySelector('[name="Fecha"]').value;
-          const nombre = form.querySelector('[name="Nombre completo"]').value;
-          const telefono = form.querySelector('[name="Teléfono"]').value;
-          const especialidad = form.querySelector('[name="Especialidad"]').value;
-          const hora = form.querySelector('[name="Hora"]').value;
-          if (!fecha) {
-            alert('Por favor selecciona una fecha.');
-            form.querySelector('[name="Fecha"]').style.border = '2px solid red';
-            return;
-          } else {
-            form.querySelector('[name="Fecha"]').style.border = '';
-          }
-          } else {
-            form.querySelector('[name="Fecha"]').style.border = '';
-          }
-          } else {
-            form.querySelector('[name="Fecha"]').style.border = '';
-          }
-          if (!hora) {
-            alert('Por favor selecciona una hora válida.');
-            form.querySelector('[name="Hora"]').style.border = '2px solid red';
-            return;
-          } else {
-            form.querySelector('[name="Hora"]').style.border = '';
-          }
-          } else {
-            form.querySelector('[name="Hora"]').style.border = '';
-          }
-          } else {
-            form.querySelector('[name="Hora"]').style.border = '';
-          }
-          if (!nombre) {
-            alert('Por favor ingresa tu nombre.');
-            form.querySelector('[name="Nombre completo"]').style.border = '2px solid red';
-            return;
-          } else {
-            form.querySelector('[name="Nombre completo"]').style.border = '';
-          }
-          if (!telefono) {
-            alert('Por favor ingresa tu teléfono.');
-            form.querySelector('[name="Teléfono"]').style.border = '2px solid red';
-            return;
-          } else {
-            form.querySelector('[name="Teléfono"]').style.border = '';
-          }
-          if (!especialidad) {
-            alert('Por favor selecciona una especialidad.');
-            form.querySelector('[name="Especialidad"]').style.border = '2px solid red';
-            return;
-          } else {
-            form.querySelector('[name="Especialidad"]').style.border = '';
-          }
-
-          e.preventDefault();
-          submitButton.disabled = true;
-          loader.style.display = 'inline';
-
-          const scriptURL = 'https://script.google.com/macros/s/AKfycbz6hw8jd5iKNUD0aZjznWe7jt_fK8Gl8PsVwuj9hAijaj3m4kxptXe7BnXz7RP-cJE/exec';
-          const formData = new FormData(form);
-          const timestamp = new Date().toLocaleString();
-          formData.append("Fecha y hora de envío", timestamp);
-
-          try {
-            const response = await fetch(scriptURL, { method: 'POST', body: formData });
-            const result = await response.text();
-            if (result === 'duplicate') {
-              alert('❌ Ya existe una cita con ese nombre, fecha y hora.');
-            } else {
-              const mensaje = document.getElementById('mensajeExito');
-mensaje.style.display = 'block';
-mensaje.style.opacity = '1';
-              form.reset();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-              setTimeout(() => {
-                mensaje.style.opacity = '0';
-setTimeout(() => { mensaje.style.display = 'none'; }, 500);
-              }, 5000);
-            }
-          } catch (error) {
-            alert('Error al enviar. Intenta nuevamente.');
-          } finally {
-            submitButton.disabled = false;
-            loader.style.display = 'none';
-          }
-        });
-      }
-
-      document.querySelectorAll('.accordion-button').forEach(button => {
-  button.addEventListener('click', () => {
-    const content = button.nextElementSibling;
-    const isOpen = content.style.maxHeight;
-
-    document.querySelectorAll('.accordion-content').forEach(c => {
-      c.style.maxHeight = null;
-    });
-
-    if (!isOpen) {
-      content.style.maxHeight = content.scrollHeight + 'px';
-    }
-  });
-});
+  <div id="especialidades" class="card">
+    <h2>Especialidades Médicas</h2>
+    <button class="accordion-button">👩‍⚕️ Ginecología</button>
+    <div class="accordion-content">Salud reproductiva, planificación familiar, anticoncepción, estudios Papanicolaou, chequeos ginecológicos.</div>
+    <button class="accordion-button">🧐 Obstetricia</button>
+    <div class="accordion-content">Control prenatal, ultrasonidos, educación perinatal, atención en embarazo de bajo y alto riesgo.</div>
+    <button class="accordion-button">👶 Pediatría</button>
+    <div class="accordion-content">Control del desarrollo infantil, vacunas, revisiones, prevención de enfermedades y orientación para madres/padres.</div>
+    <button class="accordion-button">🩺 Medicina General</button>
+    <div class="accordion-content">Valoración inicial, seguimiento a condiciones generales de salud, chequeos básicos y canalización a especialidades.</div>
+  </div>
+  <div id="agendar" class="card">
+    <h2>Agendar cita</h2>
+    <form id="formulario">
+      <label>Nombre completo</label>
+      <input name="Nombre completo" required />
+      <label>Teléfono</label>
+      <input name="Teléfono" required />
+      <label>Correo electrónico</label>
+      <input name="Correo electrónico" type="email" required />
+      <label>Sexo</label>
+      <select name="Sexo">
+        <option value="">Selecciona</option>
+        <option value="Femenino">Femenino</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Otro">Otro</option>
+      </select>
+      <label>Especialidad</label>
+      <select name="Especialidad">
+        <option value="">Selecciona</option>
+        <option value="Ginecología">Ginecología</option>
+        <option value="Obstetricia">Obstetricia</option>
+        <option value="Pediatría">Pediatría</option>
+        <option value="Medicina General">Medicina General</option>
+      </select>
+      <label>Fecha</label>
+      <input name="Fecha" type="date" required />
+      <label>Hora</label>
+      <select name="Hora" required>
+        <option value="">Selecciona una hora</option>
+      </select>
+      <label>Comentarios adicionales</label>
+      <textarea name="Comentarios adicionales"></textarea>
+      <button type="submit">Enviar</button>
+      <div class="success-message" id="mensajeExito">✅ Cita agendada correctamente.</div>
+    </form>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.accordion-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const content = button.nextElementSibling;
+        const isOpen = content.style.maxHeight;
+        document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
+        if (!isOpen) {
+          content.style.maxHeight = content.scrollHeight + 'px';
+        }
       });
     });
-  </script>
+  });
+
+    const form = document.getElementById('formulario');
+    const horaSelect = form.querySelector('[name="Hora"]');
+    const especialidadInput = form.querySelector('[name="Especialidad"]');
+    const fechaInput = form.querySelector('[name="Fecha"]');
+
+    async function actualizarHorariosDisponibles() {
+      const fecha = fechaInput.value;
+      const especialidad = especialidadInput.value;
+      if (!fecha || !especialidad) return;
+
+      const response = await fetch(`https://script.google.com/macros/s/AKfycbz6hw8jd5iKNUD0aZjznWe7jt_fK8Gl8PsVwuj9hAijaj3m4kxptXe7BnXz7RP-cJE/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`);
+      const ocupados = await response.json();
+
+      const horarios = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00",
+        "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
+        "16:00", "16:30", "17:00", "17:30"];
+
+      horaSelect.innerHTML = '';
+      const oldInfo = horaSelect.parentNode.querySelector('.hora-msg');
+      if (oldInfo) oldInfo.remove();
+
+      if (ocupados.length >= horarios.length) {
+        const option = document.createElement('option');
+        option.textContent = 'No hay horarios disponibles';
+        option.disabled = true;
+        option.selected = true;
+        horaSelect.appendChild(option);
+        horaSelect.disabled = true;
+
+        const infoMsg = document.createElement('div');
+        infoMsg.textContent = 'No hay horarios disponibles para la fecha y especialidad seleccionadas.';
+        infoMsg.className = 'hora-msg';
+        infoMsg.style.color = '#b74b7f';
+        infoMsg.style.fontWeight = 'bold';
+        infoMsg.style.marginTop = '0.5rem';
+        horaSelect.parentNode.appendChild(infoMsg);
+        return;
+      }
+
+      horaSelect.disabled = false;
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Selecciona una hora';
+      horaSelect.appendChild(defaultOption);
+
+      horarios.forEach(hora => {
+        if (!ocupados.includes(hora)) {
+          const option = document.createElement('option');
+          option.value = hora;
+          option.textContent = hora;
+          horaSelect.appendChild(option);
+        }
+      });
+    }
+
+    especialidadInput.addEventListener('change', actualizarHorariosDisponibles);
+    fechaInput.addEventListener('change', actualizarHorariosDisponibles);
+    const submitButton = form.querySelector('button[type="submit"]');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const timestamp = new Date().toLocaleString();
+    formData.append("Fecha y hora de envío", timestamp);
+
+    const requiredFields = ['Nombre completo', 'Teléfono', 'Correo electrónico', 'Sexo', 'Especialidad', 'Fecha', 'Hora'];
+    let valid = true;
+    requiredFields.forEach(name => {
+      const input = form.querySelector(`[name="${name}"]`);
+      if (!input.value) {
+        input.style.border = '2px solid red';
+        valid = false;
+      } else {
+        input.style.border = '';
+      }
+    });
+    if (!valid) {
+      alert('Por favor completa todos los campos requeridos.');
+      return;
+    }
+
+    submitButton.disabled = true;
+    const loader = document.createElement('span');
+    loader.textContent = ' Enviando...';
+    loader.style.marginLeft = '10px';
+    loader.style.color = '#b74b7f';
+    submitButton.parentNode.appendChild(loader);
+
+    try {
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbz6hw8jd5iKNUD0aZjznWe7jt_fK8Gl8PsVwuj9hAijaj3m4kxptXe7BnXz7RP-cJE/exec';
+      const response = await fetch(scriptURL, { method: 'POST', body: formData });
+      const result = await response.text();
+      if (result === 'duplicate') {
+        alert('❌ Ya existe una cita con ese horario para la especialidad seleccionada.');
+      } else {
+        document.getElementById('mensajeExito').style.display = 'block';
+        form.reset();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => {
+          document.getElementById('mensajeExito').style.display = 'none';
+        }, 5000);
+      }
+    } catch (error) {
+      alert('Error al enviar. Intenta nuevamente.');
+    } finally {
+      submitButton.disabled = false;
+      loader.remove();
+    }
+  });
+</script>
 </body>
 </html>
