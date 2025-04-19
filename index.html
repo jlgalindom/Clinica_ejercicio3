@@ -12,7 +12,7 @@
       fechaInput.setAttribute('min', today);
       fechaInput.value = today;
       const especialidadInput = document.getElementById('especialidad');
-      const horaSelect = document.getElementById('hora');
+            const horaSelect = document.getElementById('hora');
 
       async function actualizarHorariosDisponibles() {
         const fecha = fechaInput.value;
@@ -60,7 +60,7 @@
       }
 
       especialidadInput.addEventListener('change', actualizarHorariosDisponibles);
-      fechaInput.addEventListener('change', actualizarHorariosDisponibles);
+            fechaInput.addEventListener('change', actualizarHorariosDisponibles);
 
       const accordionButtons = document.querySelectorAll('.accordion-button');
       accordionButtons.forEach(btn => {
