@@ -17,7 +17,14 @@
         if (!fecha || !especialidad) return;
 
         const response = await fetch(`https://script.google.com/macros/s/AKfycbwEL-VOrZk8gKTqr1YjIiFYkskiMY8D7YXnwoCN1MYt5BkB6Hfed7Rpj34bDWo4rp4/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`);
-        const ocupados = await response.json();
+        const text = await response.text();
+        let ocupados = [];
+        try {
+          ocupados = JSON.parse(text);
+        } catch (err) {
+          console.error('Error al parsear horarios ocupados:', text);
+          return;
+        }
 
         const horarios = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"];
 
