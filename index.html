@@ -123,7 +123,7 @@
       const especialidad = especialidadInput.value;
       if (!fecha || !especialidad) return;
 
-      const response = await fetch(`https://script.google.com/macros/s/AKfycbzHLwKkHyTgRxaV3fQcgWcPx_a-4JMefUHMr8AadTp1592cqCW7BpgDNvtI6_sfsiM/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`);
+      const response = await fetch(`https://script.google.com/macros/s/AKfycbzdbwU1ppCxt1KbyJeF5FKfV7FhSJTO4JO7WKJpiTkHaGBQlpaIhCxXN8qPiYpaOBg/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`);
       const ocupados = await response.json();
 
       const horarios = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00",
@@ -206,7 +206,7 @@
     submitButton.parentNode.appendChild(loader);
 
     try {
-      const scriptURL = 'https://script.google.com/macros/s/AKfycbzHLwKkHyTgRxaV3fQcgWcPx_a-4JMefUHMr8AadTp1592cqCW7BpgDNvtI6_sfsiM/exec';
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbxFDAAAZ-ERaWARBwK_xJHby9wiJY47z-g7MGkhsrv9-idVUe_vuhFFETJus3fKjOI/exec';
       const response = await fetch(scriptURL, { method: 'POST', body: formData });
       const result = await response.text();
       if (result === 'duplicate') {
