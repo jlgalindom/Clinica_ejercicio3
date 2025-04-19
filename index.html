@@ -107,6 +107,13 @@
             const result = await response.text();
             console.log('Respuesta del servidor:', result);
             if (result.trim() === 'duplicate') {
+              alert('❌ Ya existe una cita registrada para esta especialidad, fecha y hora.');
+              return;
+            } else if (result.trim() === 'success') {
+              alert('✅ Cita registrada correctamente.');
+            } else {
+              alert('⚠️ Respuesta inesperada del servidor: ' + result);
+            }
               alert('❌ Ya existe una cita registrada con ese nombre, fecha y hora.');
               return;
             }
