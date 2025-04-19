@@ -1,106 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clínica Gineco-Pediátrica</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      background-color: #fff8fa;
-      color: #333;
-    }
-    nav {
-      background-color: #fde7f0;
-      padding: 1rem;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    nav a {
-      margin: 0 1rem;
-      text-decoration: none;
-      color: #b74b7f;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    header {
-      text-align: center;
-      padding: 2rem 1rem 1rem;
-      background-color: #fde7f0;
-    }
-    header img {
-      width: 100%;
-      max-width: 600px;
-      border-radius: 12px;
-      margin-top: 1rem;
-    }
-    h1 {
-      font-size: 2rem;
-      color: #b74b7f;
-    }
-    .container {
-      padding: 1rem;
-      max-width: 900px;
-      margin: auto;
-    }
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      padding: 1.5rem;
-      margin: 1rem 0;
-    }
-    .accordion-button {
-      width: 100%;
-      text-align: left;
-      background-color: #f9e0ea;
-      border: none;
-      padding: 1rem;
-      font-size: 1rem;
-      cursor: pointer;
-      border-radius: 8px;
-      margin-top: 0.5rem;
-    }
-    .accordion-content {
-      display: none;
-      padding: 1rem;
-      background-color: #fdf6f9;
-      border-radius: 0 0 8px 8px;
-    }
-    form label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-    form input, form select, form textarea {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    form button {
-      margin-top: 1.5rem;
-      padding: 0.75rem 1.5rem;
-      background-color: #d27b9c;
-      border: none;
-      color: white;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .success-message {
-      margin-top: 1rem;
-      color: green;
-      font-weight: bold;
-      display: none;
-    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #fff8fa; color: #333; }
+    nav { background-color: #fde7f0; padding: 1rem; text-align: center; position: sticky; top: 0; z-index: 1000; }
+    nav a { margin: 0 1rem; text-decoration: none; color: #b74b7f; font-weight: bold; transition: color 0.3s; }
+    nav a.active, nav a:hover { color: #7d2e5a; text-decoration: underline; }
+    header { text-align: center; padding: 2rem 1rem 1rem; background-color: #fde7f0; }
+    header img { width: 100%; max-width: 600px; border-radius: 12px; margin-top: 1rem; }
+    h1 { font-size: 2rem; color: #b74b7f; }
+    .container { padding: 1rem; max-width: 900px; margin: auto; }
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 1.5rem; margin: 1rem 0; }
+    .accordion-button { width: 100%; text-align: left; background-color: #f9e0ea; border: none; padding: 1rem; font-size: 1rem; cursor: pointer; border-radius: 8px; margin-top: 0.5rem; }
+    .accordion-content { display: none; padding: 1rem; background-color: #fdf6f9; border-radius: 0 0 8px 8px; }
+    form label { display: block; margin-top: 1rem; font-weight: bold; }
+    form input, form select, form textarea { width: 100%; padding: 0.5rem; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 8px; }
+    form button { margin-top: 1.5rem; padding: 0.75rem 1.5rem; background-color: #d27b9c; border: none; color: white; font-size: 1rem; border-radius: 8px; cursor: pointer; }
+    .success-message { margin-top: 1rem; color: green; font-weight: bold; display: none; }
   </style>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const navLinks = document.querySelectorAll('nav a');
+      function onScroll() {
+        let scrollPosition = window.scrollY;
+        navLinks.forEach(link => {
+          const section = document.querySelector(link.getAttribute('href'));
+          if (section.offsetTop - 100 <= scrollPosition && section.offsetTop + section.offsetHeight > scrollPosition) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+      document.addEventListener('scroll', onScroll);
+    });
+  </script>
 </head>
 <body>
   <nav>
@@ -108,12 +46,10 @@
     <a href="#especialidades">Especialidades</a>
     <a href="#agendar">Agendar cita</a>
   </nav>
-
   <header>
     <h1>Clínica Gineco-Pediátrica</h1>
     <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada Clínica" />
   </header>
-
   <div class="container">
     <div id="quienes" class="card">
       <h2>¿Quiénes somos?</h2>
@@ -132,34 +68,26 @@
         <li>Enfoque de género y niñez</li>
       </ul>
     </div>
-
     <div id="especialidades" class="card">
       <h2>Especialidades Médicas</h2>
       <button class="accordion-button">👩‍⚕️ Ginecología</button>
       <div class="accordion-content">Salud reproductiva, planificación familiar, anticoncepción, estudios Papanicolaou, chequeos ginecológicos.</div>
-
       <button class="accordion-button">🧐 Obstetricia</button>
       <div class="accordion-content">Control prenatal, ultrasonidos, educación perinatal, atención en embarazo de bajo y alto riesgo.</div>
-
       <button class="accordion-button">👶 Pediatría</button>
       <div class="accordion-content">Control del desarrollo infantil, vacunas, revisiones, prevención de enfermedades y orientación para madres/padres.</div>
-
       <button class="accordion-button">🩺 Medicina General</button>
       <div class="accordion-content">Valoración inicial, seguimiento a condiciones generales de salud, chequeos básicos y canalización a especialidades.</div>
     </div>
-
     <div id="agendar" class="card">
       <h2>Agendar cita</h2>
       <form id="formulario">
         <label>Nombre completo</label>
         <input name="Nombre completo" required />
-
         <label>Teléfono</label>
         <input name="Teléfono" required />
-
         <label>Correo electrónico</label>
         <input name="Correo electrónico" type="email" required />
-
         <label>Sexo</label>
         <select name="Sexo">
           <option value="">Selecciona</option>
@@ -167,7 +95,6 @@
           <option value="Masculino">Masculino</option>
           <option value="Otro">Otro</option>
         </select>
-
         <label>Especialidad</label>
         <select name="Especialidad">
           <option value="">Selecciona</option>
@@ -176,28 +103,34 @@
           <option value="Pediatría">Pediatría</option>
           <option value="Medicina General">Medicina General</option>
         </select>
-
         <label>Fecha</label>
         <input name="Fecha" type="date" required />
-
         <label>Hora</label>
         <input name="Hora" type="time" required />
-
         <label>Comentarios adicionales</label>
         <textarea name="Comentarios adicionales"></textarea>
-
         <button type="submit">Enviar</button>
         <div class="success-message" id="mensajeExito">Cita agendada correctamente.</div>
       </form>
     </div>
   </div>
-
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('formulario');
+      const submitButton = form.querySelector('button[type="submit"]');
+      const loader = document.createElement('span');
+      loader.textContent = ' Enviando...';
+      loader.style.display = 'none';
+      loader.style.marginLeft = '10px';
+      loader.style.color = '#b74b7f';
+      submitButton.parentNode.appendChild(loader);
+
       if (form) {
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
+          submitButton.disabled = true;
+          loader.style.display = 'inline';
+
           const scriptURL = 'https://script.google.com/macros/s/AKfycbxWABx-IBcCVhKz4c0JNKj_MUgqRoU1L3J2YnNGnOalJhvg2QDfU4_6p5RODTKu9Yg/exec';
           const formData = new FormData(form);
           const timestamp = new Date().toLocaleString();
@@ -211,12 +144,16 @@
             } else {
               document.getElementById('mensajeExito').style.display = 'block';
               form.reset();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
               setTimeout(() => {
                 document.getElementById('mensajeExito').style.display = 'none';
               }, 5000);
             }
           } catch (error) {
             alert('Error al enviar. Intenta nuevamente.');
+          } finally {
+            submitButton.disabled = false;
+            loader.style.display = 'none';
           }
         });
       }
