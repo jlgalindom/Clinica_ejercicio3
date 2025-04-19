@@ -206,7 +206,7 @@
     submitButton.parentNode.appendChild(loader);
 
     try {
-      const scriptURL = 'https://script.google.com/macros/s/AKfycbxFDAAAZ-ERaWARBwK_xJHby9wiJY47z-g7MGkhsrv9-idVUe_vuhFFETJus3fKjOI/exec';
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbxzzie-glxr-27GAO09kTVTUNFeANdZI-dBV9sUulQXlzy_sw7Nxc08bop8toS87Cw/exec';
       const response = await fetch(scriptURL, { method: 'POST', body: formData });
       const result = await response.text();
       if (result === 'duplicate') {
