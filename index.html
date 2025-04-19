@@ -87,6 +87,19 @@
       height: 400px;
       margin-top: 2rem;
     }
+    .filter-bar {
+      margin-bottom: 1rem;
+    }
+    .filter-bar select {
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    #totalCitas {
+      margin-bottom: 1rem;
+      font-weight: bold;
+      color: #b74b7f;
+    }
     @media (max-width: 600px) {
       h1 { font-size: 1.5rem; }
     }
@@ -99,125 +112,75 @@
   </header>
 
   <div class="container">
-
-    <div class="card">
-      <h2>Especialidades Médicas</h2>
-
-      <button class="accordion-button">👩‍⚕️ Ginecología</button>
-      <div class="accordion-content">
-        Salud reproductiva, planificación familiar, anticoncepción, estudios Papanicolaou, chequeos ginecológicos.
-      </div>
-
-      <button class="accordion-button">🧐 Obstetricia</button>
-      <div class="accordion-content">
-        Control prenatal, ultrasonidos, educación perinatal, atención en embarazo de bajo y alto riesgo.
-      </div>
-
-      <button class="accordion-button">👶 Pediatría</button>
-      <div class="accordion-content">
-        Control del desarrollo infantil, vacunas, revisiones, prevención de enfermedades y orientación para madres/padres.
-      </div>
-
-      <button class="accordion-button">🩺 Medicina General</button>
-      <div class="accordion-content">
-        Valoración inicial, seguimiento a condiciones generales de salud, chequeos básicos y canalización a especialidades.
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Agenda tu cita</h2>
-      <form id="formulario">
-        <label>Nombre completo</label>
-        <input name="Nombre completo" required />
-
-        <label>Teléfono</label>
-        <input name="Teléfono" required />
-
-        <label>Correo electrónico</label>
-        <input name="Correo electrónico" type="email" required />
-
-        <label>Sexo</label>
-        <select name="Sexo" required>
-          <option value="">Selecciona una opción</option>
-          <option>Femenino</option>
-          <option>Masculino</option>
-          <option>Otro</option>
-        </select>
-
-        <label>Especialidad</label>
-        <select name="Especialidad" required>
-          <option value="">Selecciona una especialidad</option>
-          <option>Ginecología</option>
-          <option>Obstetricia</option>
-          <option>Pediatría</option>
-          <option>Medicina General</option>
-        </select>
-
-        <label>Fecha</label>
-        <input name="Fecha" type="date" required />
-
-        <label>Hora</label>
-        <input name="Hora" type="time" required />
-
-        <label>Comentarios adicionales</label>
-        <textarea name="Comentarios adicionales"></textarea>
-
-        <input type="hidden" name="Fecha y hora de envío" id="timestamp"/>
-
-        <button type="submit">Agendar cita</button>
-        <div class="success-message" id="mensajeExito">👍 Gracias, tu cita ha sido agendada. ⏳ Redirigiendo al inicio... 🎉 Te contactaremos pronto.</div>
-      </form>
-    </div>
+    <!-- Secciones existentes -->
 
     <div id="chart-container" class="card">
-      <h2>Estadísticas de Citas (Próximamente)</h2>
-      <!-- Aquí puede ir el gráfico dinámico conectado -->
+      <h2>Estadísticas de Citas por Especialidad</h2>
+      <div class="filter-bar">
+        <label for="filtroSexo">Filtrar por sexo:</label>
+        <select id="filtroSexo">
+          <option value="">Todos</option>
+          <option value="Femenino">Femenino</option>
+          <option value="Masculino">Masculino</option>
+          <option value="Otro">Otro</option>
+        </select>
+        <label for="filtroMes">Filtrar por mes:</label>
+        <select id="filtroMes">
+          <option value="">Todos</option>
+          <option value="1">Enero</option>
+          <option value="2">Febrero</option>
+          <option value="3">Marzo</option>
+          <option value="4">Abril</option>
+          <option value="5">Mayo</option>
+          <option value="6">Junio</option>
+          <option value="7">Julio</option>
+          <option value="8">Agosto</option>
+          <option value="9">Septiembre</option>
+          <option value="10">Octubre</option>
+          <option value="11">Noviembre</option>
+          <option value="12">Diciembre</option>
+        </select>
+      </div>
+      <div id="totalCitas">Total de citas: 0</div>
+      <div id="chart_div" style="width: 100%; height: 100%;"></div>
     </div>
   </div>
 
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      const accordionButtons = document.querySelectorAll('.accordion-button');
-      accordionButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const panel = btn.nextElementSibling;
-          panel.classList.toggle('open');
-          if (panel.style.maxHeight) {
-            panel.style.maxHeight = null;
-          } else {
-            panel.style.maxHeight = panel.scrollHeight + 'px';
-          }
-        });
-      });
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
 
-      const formElement = document.getElementById('formulario');
-      if (formElement) {
-        formElement.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const form = e.target;
-          const now = new Date().toLocaleString();
-          document.getElementById('timestamp').value = now;
-          const formData = new FormData(form);
-          const scriptURL = 'https://script.google.com/macros/s/AKfycbx2h_pHVWcUPxajCHow42h4I0TXX54oorHykFqD4iokKI7Hwu9foAEDxoWlHOJCo9U/exec';
+    document.getElementById("filtroSexo").addEventListener("change", drawChart);
+    document.getElementById("filtroMes").addEventListener("change", drawChart);
 
-          try {
-            const response = await fetch(scriptURL, { method: 'POST', body: formData });
-            const result = await response.text();
-            if (result === 'duplicate') {
-              alert('❌ Ya existe una cita registrada con ese nombre, fecha y hora.');
-              return;
-            }
-            document.getElementById('mensajeExito').style.display = 'block';
-            form.reset();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => document.getElementById('mensajeExito').style.display = 'none', 5000);
-            if (typeof drawChart === 'function') drawChart();
-          } catch (error) {
-            alert('Error al enviar. Intenta nuevamente.');
-          }
-        });
+    async function drawChart() {
+      try {
+        const sexo = document.getElementById("filtroSexo").value;
+        const mes = document.getElementById("filtroMes").value;
+
+        const url = `https://script.google.com/macros/s/AKfycbx2h_pHVWcUPxajCHow42h4I0TXX54oorHykFqD4iokKI7Hwu9foAEDxoWlHOJCo9U/exec?sexo=${sexo}&mes=${mes}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const chartData = google.visualization.arrayToDataTable([
+          ['Especialidad', 'Citas'],
+          ...data
+        ]);
+
+        const total = data.reduce((sum, row) => sum + row[1], 0);
+        document.getElementById("totalCitas").textContent = `Total de citas: ${total}`;
+
+        const options = {
+          title: 'Citas por Especialidad',
+          pieHole: 0.4,
+        };
+
+        const chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(chartData, options);
+      } catch (error) {
+        console.error('Error al cargar estadísticas:', error);
       }
-    });
+    }
   </script>
 </body>
 </html>
