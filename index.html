@@ -33,28 +33,6 @@
       padding: 1.5rem;
       margin: 1rem 0;
     }
-    .accordion-button {
-      background-color: #f3d9e3;
-      border: none;
-      width: 100%;
-      text-align: left;
-      padding: 1rem;
-      font-size: 1.1rem;
-      cursor: pointer;
-      border-radius: 8px;
-      margin-top: 0.5rem;
-    }
-    .accordion-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease;
-      padding: 0 1rem;
-      background-color: #fff4fa;
-      border-radius: 0 0 8px 8px;
-    }
-    .accordion-content.open {
-      padding: 0.5rem 1rem;
-    }
     form label {
       display: block;
       margin-top: 1rem;
@@ -83,104 +61,87 @@
       font-weight: bold;
       display: none;
     }
-    #chart-container {
-      height: 400px;
-      margin-top: 2rem;
-    }
-    .filter-bar {
-      margin-bottom: 1rem;
-    }
-    .filter-bar select {
-      padding: 0.5rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    #totalCitas {
-      margin-bottom: 1rem;
-      font-weight: bold;
-      color: #b74b7f;
-    }
-    @media (max-width: 600px) {
-      h1 { font-size: 1.5rem; }
-    }
   </style>
 </head>
 <body>
   <header>
     <h1>Clínica Gineco-Pediátrica</h1>
-    <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada Clínica" style="width:100%; max-width:600px; border-radius:12px;">
   </header>
 
   <div class="container">
-    <!-- Secciones existentes -->
+    <div class="card">
+      <h2>Agendar cita</h2>
+      <form id="formulario">
+        <label>Nombre completo</label>
+        <input name="Nombre completo" required />
 
-    <div id="chart-container" class="card">
-      <h2>Estadísticas de Citas por Especialidad</h2>
-      <div class="filter-bar">
-        <label for="filtroSexo">Filtrar por sexo:</label>
-        <select id="filtroSexo">
-          <option value="">Todos</option>
+        <label>Teléfono</label>
+        <input name="Teléfono" required />
+
+        <label>Correo electrónico</label>
+        <input name="Correo electrónico" type="email" required />
+
+        <label>Sexo</label>
+        <select name="Sexo">
+          <option value="">Selecciona</option>
           <option value="Femenino">Femenino</option>
           <option value="Masculino">Masculino</option>
           <option value="Otro">Otro</option>
         </select>
-        <label for="filtroMes">Filtrar por mes:</label>
-        <select id="filtroMes">
-          <option value="">Todos</option>
-          <option value="1">Enero</option>
-          <option value="2">Febrero</option>
-          <option value="3">Marzo</option>
-          <option value="4">Abril</option>
-          <option value="5">Mayo</option>
-          <option value="6">Junio</option>
-          <option value="7">Julio</option>
-          <option value="8">Agosto</option>
-          <option value="9">Septiembre</option>
-          <option value="10">Octubre</option>
-          <option value="11">Noviembre</option>
-          <option value="12">Diciembre</option>
+
+        <label>Especialidad</label>
+        <select name="Especialidad">
+          <option value="">Selecciona</option>
+          <option value="Ginecología">Ginecología</option>
+          <option value="Obstetricia">Obstetricia</option>
+          <option value="Pediatría">Pediatría</option>
+          <option value="Medicina General">Medicina General</option>
         </select>
-      </div>
-      <div id="totalCitas">Total de citas: 0</div>
-      <div id="chart_div" style="width: 100%; height: 100%;"></div>
+
+        <label>Fecha</label>
+        <input name="Fecha" type="date" required />
+
+        <label>Hora</label>
+        <input name="Hora" type="time" required />
+
+        <label>Comentarios adicionales</label>
+        <textarea name="Comentarios adicionales"></textarea>
+
+        <button type="submit">Enviar</button>
+        <div class="success-message" id="mensajeExito">Cita agendada correctamente.</div>
+      </form>
     </div>
   </div>
 
   <script>
-    google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('formulario');
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const scriptURL = 'https://script.google.com/macros/s/AKfycbxWABx-IBcCVhKz4c0JNKj_MUgqRoU1L3J2YnNGnOalJhvg2QDfU4_6p5RODTKu9Yg/exec';
+          const formData = new FormData(form);
+          const timestamp = new Date().toLocaleString();
+          formData.append("Fecha y hora de envío", timestamp);
 
-    document.getElementById("filtroSexo").addEventListener("change", drawChart);
-    document.getElementById("filtroMes").addEventListener("change", drawChart);
-
-    async function drawChart() {
-      try {
-        const sexo = document.getElementById("filtroSexo").value;
-        const mes = document.getElementById("filtroMes").value;
-
-        const url = `https://script.google.com/macros/s/AKfycbx2h_pHVWcUPxajCHow42h4I0TXX54oorHykFqD4iokKI7Hwu9foAEDxoWlHOJCo9U/exec?sexo=${sexo}&mes=${mes}`;
-        const response = await fetch(url);
-        const data = await response.json();
-
-        const chartData = google.visualization.arrayToDataTable([
-          ['Especialidad', 'Citas'],
-          ...data
-        ]);
-
-        const total = data.reduce((sum, row) => sum + row[1], 0);
-        document.getElementById("totalCitas").textContent = `Total de citas: ${total}`;
-
-        const options = {
-          title: 'Citas por Especialidad',
-          pieHole: 0.4,
-        };
-
-        const chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-        chart.draw(chartData, options);
-      } catch (error) {
-        console.error('Error al cargar estadísticas:', error);
+          try {
+            const response = await fetch(scriptURL, { method: 'POST', body: formData });
+            const result = await response.text();
+            if (result === 'duplicate') {
+              alert('❌ Ya existe una cita con ese nombre, fecha y hora.');
+            } else {
+              document.getElementById('mensajeExito').style.display = 'block';
+              form.reset();
+              setTimeout(() => {
+                document.getElementById('mensajeExito').style.display = 'none';
+              }, 5000);
+            }
+          } catch (error) {
+            alert('Error al enviar. Intenta nuevamente.');
+          }
+        });
       }
-    }
+    });
   </script>
 </body>
 </html>
