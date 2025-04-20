@@ -73,7 +73,7 @@
       <option value="Femenino">Femenino</option>
       <option value="Masculino">Masculino</option>
       <option value="Otro">Otro</option>
-    $1
+    
     <small id="horaError" style="color: red; display: block; margin-top: 4px;"></small>
     <label for="especialidad">Especialidad</label>
     <select id="especialidad" name="Especialidad" required>
@@ -254,7 +254,12 @@ if (!telefonoValido) {
             console.warn("⚠️ No hay horarios válidos disponibles desde el servidor.");
             document.getElementById('horaError').textContent = '⚠️ No se pudieron cargar horarios válidos desde el servidor. Intenta cambiar la fecha o especialidad.';
           }
-          horaSelect.innerHTML = '<option value="">Selecciona una hora...</option>';
+          horaSelect.innerHTML = '';
+          const defaultOption = document.createElement('option');
+          defaultOption.value = '';
+          defaultOption.textContent = 'Selecciona una hora...';
+          horaSelect.appendChild(defaultOption);
+          document.getElementById('horaError').textContent = '';
           let disponibles = 0;
           opciones.forEach(hora => {
             if (!horasNormalizadas.includes(hora)) {
