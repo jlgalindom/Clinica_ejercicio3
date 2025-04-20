@@ -138,8 +138,11 @@
         ['nombre','telefono','correo','fecha','hora'].forEach(id => {
           document.getElementById(id).style.borderColor = '#ccc';
         });
-      const fechaEnvio = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+      const ahora = new Date();
+      const fechaEnvio = ahora.toLocaleString('sv-SE', { timeZone: 'America/Mexico_City' }).replace(',', '');
       document.getElementById('fechaEnvio').value = fechaEnvio;
+      document.getElementById('fecha').value = ahora.toLocaleDateString('sv-SE', { timeZone: 'America/Mexico_City' });
+      document.getElementById('hora').value = ahora.toLocaleTimeString('sv-SE', { timeZone: 'America/Mexico_City', hour: '2-digit', minute: '2-digit' });
       const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
 const telefonoValido = /^\d{10}$/.test(telefono);
 
@@ -181,7 +184,14 @@ if (!telefonoValido) {
             row.forEach((col, idx) => {
               const td = document.createElement('td');
               if (data[0][idx] === 'Fecha y hora de envío' && col) {
-                const fechaMX = new Date(col).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+                const fecha = new Date(col);
+                const anio = fecha.getFullYear();
+                const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+                const dia = String(fecha.getDate()).padStart(2, '0');
+                const horas = String(fecha.getHours()).padStart(2, '0');
+                const minutos = String(fecha.getMinutes()).padStart(2, '0');
+                td.textContent = `${anio}-${mes}-${dia} ${horas}:${minutos}`;
+              });
                 td.textContent = fechaMX;
               } else {
                 td.textContent = col;
@@ -191,12 +201,42 @@ if (!telefonoValido) {
             tbody.appendChild(tr);
           });
           table.appendChild(tbody);
-          const existing = document.getElementById('tablaDatos');
-          if (existing) existing.remove();
-          const div = document.createElement('div');
-          div.id = 'tablaDatos';
-          div.appendChild(table);
-          document.getElementById('formulario').appendChild(div);
+          const existingPopup = document.getElementById('popupCitas');
+          if (existingPopup) existingPopup.remove();
+          const popup = document.createElement('div');
+          popup.id = 'popupCitas';
+          popup.style.position = 'fixed';
+          popup.style.top = '10%';
+          popup.style.left = '50%';
+          popup.style.transform = 'translateX(-50%)';
+          popup.style.background = 'white';
+          popup.style.padding = '1rem';
+          popup.style.border = '1px solid #ccc';
+          popup.style.borderRadius = '8px';
+          popup.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+          popup.style.zIndex = '1000';
+          popup.style.maxHeight = '80vh';
+          popup.style.overflowY = 'auto';
+          const titulo = document.createElement('h2');
+          titulo.textContent = '📋 Citas registradas';
+          titulo.style.marginTop = '0';
+          titulo.style.textAlign = 'center';
+          titulo.style.borderBottom = '1px solid #ccc';
+          titulo.style.paddingBottom = '0.5rem';
+          titulo.style.marginBottom = '1rem';
+          popup.appendChild(titulo);
+          const closeBtn = document.createElement('button');
+          closeBtn.textContent = 'Cerrar';
+          closeBtn.style.marginTop = '1rem';
+          closeBtn.style.background = '#c94f7c';
+          closeBtn.style.color = 'white';
+          closeBtn.style.border = 'none';
+          closeBtn.style.padding = '0.5rem 1rem';
+          closeBtn.style.borderRadius = '5px';
+          closeBtn.onclick = () => popup.remove();
+          popup.appendChild(table);
+          popup.appendChild(closeBtn);
+          document.body.appendChild(popup);
         })
         .catch(err => {
           console.error('Error al obtener todos los datos:', err);
