@@ -140,7 +140,13 @@
         ['nombre','telefono','correo','fecha','hora'].forEach(id => {
           document.getElementById(id).style.borderColor = '#ccc';
         });
-      const fechaEnvio = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+      const nowCDMX = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
+      const anio = nowCDMX.getFullYear();
+      const mes = String(nowCDMX.getMonth() + 1).padStart(2, '0');
+      const dia = String(nowCDMX.getDate()).padStart(2, '0');
+      const hora = String(nowCDMX.getHours()).padStart(2, '0');
+      const minutos = String(nowCDMX.getMinutes()).padStart(2, '0');
+      const fechaEnvio = `${anio}-${mes}-${dia} ${hora}:${minutos}`;
       document.getElementById('fechaEnvio').value = fechaEnvio;
       const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
 const telefonoValido = /^\d{10}$/.test(telefono);
@@ -286,6 +292,7 @@ if (!telefonoValido) {
       .then(res => res.text())
       .then(result => {
         if (result === 'success') {form.reset();
+          document.getElementById('mensajeError').textContent = '';
           const vistaPrevia = document.createElement('div');
           const fechaHora = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
           vistaPrevia.innerHTML = `<p style='margin-top:1rem; background:#e7f1ff; color:#084298; padding:1rem; border-left:4px solid #0d6efd; border-radius:6px;'>📋 <strong>Vista previa:</strong> Cita registrada exitosamente el <strong>${fechaHora}</strong> (Hora local CDMX)</p>`;
