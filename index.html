@@ -242,7 +242,7 @@ if (!telefonoValido) {
           horaSelect.innerHTML = '<option value="">Selecciona una hora...</option>';
           let disponibles = 0;
           opciones.forEach(hora => {
-            if (!horasOcupadas.includes(hora)) {
+            if (!horasOcupadas.map(h => h.trim()).includes(hora)) {
               const option = document.createElement('option');
               option.value = hora;
               option.textContent = hora;
