@@ -99,11 +99,12 @@
     function validarFormulario(event) {
       const fechaSeleccionada = document.getElementById('fecha').value;
       
-      const hoyCDMX = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
-      hoyCDMX.setHours(0, 0, 0, 0);
-      const diaSeleccionado = new Date(fechaSeleccionada);
+      const [anio, mes, dia] = fechaSeleccionada.split('-').map(Number);
+      const diaSeleccionado = new Date(Date.UTC(anio, mes - 1, dia));
+      const ahoraCDMX = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
+      const referenciaHoy = new Date(Date.UTC(ahoraCDMX.getFullYear(), ahoraCDMX.getMonth(), ahoraCDMX.getDate()));
       const diaSemana = diaSeleccionado.getDay();
-      if (diaSeleccionado < hoyCDMX) {
+      if (diaSeleccionado < referenciaHoy) {
         document.getElementById('fecha').style.borderColor = 'red';
         document.getElementById('mensajeError').textContent = '❌ No puedes agendar citas en fechas pasadas.';
         return false;
@@ -212,6 +213,16 @@ if (!telefonoValido) {
       if (!especialidad || !fecha) return;
 
       const url = `https://script.google.com/macros/s/AKfycbwODlQWO-BFuBMFvAc-RB_jBKqDmliJJ_QBFQi3zWNBgvehALHVBGJWZTg8RA7T4HQ/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
+      console.log('URL consultada para horarios:', url);
+          const visorURL = document.createElement('div');
+          visorURL.textContent = url;
+          visorURL.style.fontSize = '0.85rem';
+          visorURL.style.background = '#f0f0f0';
+          visorURL.style.padding = '0.5rem';
+          visorURL.style.marginTop = '0.5rem';
+          visorURL.style.border = '1px dashed #ccc';
+          document.getElementById('formulario').appendChild(visorURL);
+          setTimeout(() => visorURL.remove(), 6000);
       fetch(url)
         .then(res => res.json())
         .then(horasOcupadas => {
