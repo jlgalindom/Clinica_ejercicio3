@@ -81,8 +81,9 @@
       <option value="Pediatría">Pediatría</option>
       <option value="Medicina General">Medicina General</option>
     </select>
-    $1
-<small id="diaSemanaTexto" style="display:block; margin-top:4px; font-weight:normal; color:#666;"></small>
+    <label for="fecha">Fecha</label>
+    <input id="fecha" name="Fecha" type="date" required>
+    <small id="diaSemanaTexto" style="display:block; margin-top:4px; font-weight:normal; color:#666;"></small>
     <label for="hora">Hora</label>
     <select id="hora" name="Hora" required>
       <option value="">Selecciona una hora...</option>
@@ -102,13 +103,13 @@
       const diaSeleccionado = new Date(`${fechaSeleccionada}T00:00:00-06:00`);
       const ahoraCDMX = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
       const referenciaHoy = new Date(Date.UTC(ahoraCDMX.getFullYear(), ahoraCDMX.getMonth(), ahoraCDMX.getDate()));
-      const diaSemana = new Date(`${fechaSeleccionada}T00:00:00`).getDay();
+      const diaSemanaNombre = new Date(`${fechaSeleccionada}T00:00:00`).toLocaleDateString('es-MX', { weekday: 'long', timeZone: 'America/Mexico_City' }).toLowerCase();
       if (diaSeleccionado < referenciaHoy) {
         document.getElementById('fecha').style.borderColor = 'red';
         document.getElementById('mensajeError').textContent = '❌ No puedes agendar citas en fechas pasadas.';
         return false;
       }
-      if (diaSemana === 0 || diaSemana === 6) {
+      if (diaSemanaNombre === 'sábado' || diaSemanaNombre === 'domingo') {
         document.getElementById('fecha').style.borderColor = 'red';
         document.getElementById('mensajeError').textContent = '❌ Las citas solo se pueden agendar de lunes a viernes.';
         return false;
