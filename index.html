@@ -73,7 +73,8 @@
       <option value="Femenino">Femenino</option>
       <option value="Masculino">Masculino</option>
       <option value="Otro">Otro</option>
-    </select>
+    $1
+    <small id="horaError" style="color: red; display: block; margin-top: 4px;"></small>
     <label for="especialidad">Especialidad</label>
     <select id="especialidad" name="Especialidad" required>
       <option value="Ginecología">Ginecología</option>
@@ -85,7 +86,7 @@
     <input id="fecha" name="Fecha" type="date" required min="" onfocus="this.min=new Date().toISOString().split('T')[0]; this.max=new Date(Date.now()+30*24*60*60*1000).toISOString().split('T')[0];">
     <small id="diaSemanaTexto" style="display:block; margin-top:4px; font-weight:normal; color:#666;"></small>
     <label for="hora">Hora</label>
-    <select id="hora" name="Hora" required>
+    <select id="hora" name="Hora" required aria-describedby="horaError">
       <option value="">Selecciona una hora...</option>
     </select>
     <label for="comentarios">Comentarios adicionales</label>
@@ -239,13 +240,20 @@ if (!telefonoValido) {
             return;
           }
           const opciones = generarOpcionesHorarios();
-          const horasNormalizadas = horasOcupadas.map(h => {
-            const partes = h.trim().split(':');
-            if (partes.length >= 2) {
-              return `${partes[0].padStart(2, '0')}:${partes[1].padStart(2, '0')}`;
-            }
-            return null;
-          }).filter(h => h);
+          const horasNormalizadas = horasOcupadas
+            .map(h => {
+              if (!h || typeof h !== 'string' || !h.includes(':')) return null;
+              const partes = h.trim().split(':');
+              if (partes.length >= 2) {
+                return `${partes[0].padStart(2, '0')}:${partes[1].padStart(2, '0')}`;
+              }
+              return null;
+            })
+            .filter(Boolean);
+          if (horasNormalizadas.length === 0) {
+            console.warn("⚠️ No hay horarios válidos disponibles desde el servidor.");
+            document.getElementById('horaError').textContent = '⚠️ No se pudieron cargar horarios válidos desde el servidor. Intenta cambiar la fecha o especialidad.';
+          }
           horaSelect.innerHTML = '<option value="">Selecciona una hora...</option>';
           let disponibles = 0;
           opciones.forEach(hora => {
