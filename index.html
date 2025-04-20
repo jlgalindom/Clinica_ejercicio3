@@ -277,6 +277,7 @@ if (!telefonoValido) {
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+  actualizarHorariosDisponibles();
   document.getElementById('formulario').addEventListener('submit', function(event) {
     event.preventDefault();
     if (!validarFormulario(event)) return;
