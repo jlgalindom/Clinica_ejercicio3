@@ -82,7 +82,7 @@
       <option value="Medicina General">Medicina General</option>
     </select>
     <label for="fecha">Fecha</label>
-    <input id="fecha" name="Fecha" type="date" required>
+    <input id="fecha" name="Fecha" type="date" required min="" onfocus="this.min=new Date().toISOString().split('T')[0]; this.max=new Date(Date.now()+30*24*60*60*1000).toISOString().split('T')[0];">
     <small id="diaSemanaTexto" style="display:block; margin-top:4px; font-weight:normal; color:#666;"></small>
     <label for="hora">Hora</label>
     <select id="hora" name="Hora" required>
@@ -285,7 +285,7 @@ if (!telefonoValido) {
     fetch(scriptURL, { method: 'POST', body: formData })
       .then(res => res.text())
       .then(result => {
-        if (result === 'success') {$1form.reset();
+        if (result === 'success') {form.reset();
           const vistaPrevia = document.createElement('div');
           const fechaHora = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
           vistaPrevia.innerHTML = `<p style='margin-top:1rem; background:#e7f1ff; color:#084298; padding:1rem; border-left:4px solid #0d6efd; border-radius:6px;'>📋 <strong>Vista previa:</strong> Cita registrada exitosamente el <strong>${fechaHora}</strong> (Hora local CDMX)</p>`;
