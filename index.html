@@ -98,10 +98,11 @@
   <script>
     function validarFormulario(event) {
       const fechaSeleccionada = document.getElementById('fecha').value;
-      const fechaActual = new Date();
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
       const diaSeleccionado = new Date(fechaSeleccionada);
       const diaSemana = diaSeleccionado.getDay();
-      if (diaSeleccionado < fechaActual.setHours(0,0,0,0)) {
+      if (diaSeleccionado < hoy) {
         document.getElementById('fecha').style.borderColor = 'red';
         document.getElementById('mensajeError').textContent = '❌ No puedes agendar citas en fechas pasadas.';
         return false;
