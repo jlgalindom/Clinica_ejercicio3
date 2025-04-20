@@ -59,144 +59,231 @@
 </head>
 <body>
   <h1>Clínica Gineco-Pediátrica</h1>
+  <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada" style="display:block; margin:1rem auto; max-width:100%; border-radius:8px;">
+
   <form id="formulario">
     <label for="nombre">Nombre completo</label>
-    <input id="nombre" name="nombre" required>
-
+    <input id="nombre" name="Nombre completo" required>
     <label for="telefono">Teléfono</label>
-    <input id="telefono" name="telefono" required>
-
+    <input id="telefono" name="Teléfono" required>
     <label for="correo">Correo electrónico</label>
-    <input id="correo" name="correo" type="email" required>
-
+    <input id="correo" name="Correo electrónico" type="email" required>
     <label for="sexo">Sexo</label>
-    <select id="sexo" name="sexo" required>
+    <select id="sexo" name="Sexo" required>
       <option value="Femenino">Femenino</option>
       <option value="Masculino">Masculino</option>
       <option value="Otro">Otro</option>
     </select>
-
     <label for="especialidad">Especialidad</label>
-    <select id="especialidad" name="especialidad" required>
+    <select id="especialidad" name="Especialidad" required>
       <option value="Ginecología">Ginecología</option>
       <option value="Obstetricia">Obstetricia</option>
       <option value="Pediatría">Pediatría</option>
       <option value="Medicina General">Medicina General</option>
     </select>
-
     <label for="fecha">Fecha</label>
-    <input id="fecha" name="fecha" type="date" required>
-
+    <input id="fecha" name="Fecha" type="date" required>
     <label for="hora">Hora</label>
-    <select id="hora" name="hora" required>
+    <select id="hora" name="Hora" required>
       <option value="">Selecciona una hora...</option>
     </select>
-
     <label for="comentarios">Comentarios adicionales</label>
-    <textarea id="comentarios" name="comentarios"></textarea>
-
+    <textarea id="comentarios" name="Comentarios adicionales"></textarea>
+    <input type="hidden" id="fechaEnvio" name="Fecha y hora de envío">
     <button type="submit">Agendar cita</button>
-    <button type="button" onclick="probarConsultaGeneral()">🧪 Consultar todos los registros</button>
+    <button type="button" id="consultarRegistros">🧪 Consultar todos los registros</button>
+    <div id="mensajeError" style="color: red; font-weight: bold; margin-top: 1rem;"></div>
   </form>
 
   <script>
+    function validarFormulario(event) {
+      const nombre = document.getElementById('nombre').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
+      const correo = document.getElementById('correo').value.trim();
+      const fecha = document.getElementById('fecha').value;
+      const hora = document.getElementById('hora').value;
+
+      if (!nombre || !telefono || !correo || !fecha || !hora) {
+        ['nombre','telefono','correo','fecha','hora'].forEach(id => {
+          const el = document.getElementById(id);
+          if (!el.value.trim()) {
+            el.style.borderColor = 'red';
+          } else {
+            el.style.borderColor = '#ccc';
+          }
+        });
+        document.getElementById('mensajeError').textContent = 'Por favor completa todos los campos obligatorios antes de enviar.';
+        event.preventDefault();
+        return false;
+      }
+      ['nombre','telefono','correo','fecha','hora'].forEach(id => {
+        document.getElementById(id).style.borderColor = '#ccc';
+      });
+      document.getElementById('mensajeError').textContent = '';
+      document.getElementById('fechaEnvio').value = new Date().toISOString();
+      const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+const telefonoValido = /^\d{10}$/.test(telefono);
+
+if (!correoValido) {
+  document.getElementById('correo').style.borderColor = 'red';
+  document.getElementById('mensajeError').textContent = '❌ Ingresa un correo electrónico válido.';
+  return false;
+}
+
+if (!telefonoValido) {
+  document.getElementById('telefono').style.borderColor = 'red';
+  document.getElementById('mensajeError').textContent = '❌ El teléfono debe tener exactamente 10 dígitos numéricos.';
+  return false;
+}
+
+      return true;
+    }
+
     function probarConsultaGeneral() {
-      const url = 'https://script.google.com/macros/s/AKfycbxGcQ1_liXu1JZvrEbsFE938URX9ZB9BymilzF8UsHVSBAFtGoqJ28b8E7BFofKG4Q/exec?test=all';
+      const url = 'https://script.google.com/macros/s/AKfycbwODlQWO-BFuBMFvAc-RB_jBKqDmliJJ_QBFQi3zWNBgvehALHVBGJWZTg8RA7T4HQ/exec?test=all';
       fetch(url)
         .then(res => {
-          if (!res.ok) throw new Error('Respuesta no exitosa del servidor');
+          if (!res.ok) throw new Error('Respuesta no válida del servidor');
           return res.text();
         })
-        .then(data => {
+        .then(text => {
+          let data;
           try {
-            const parsed = JSON.parse(data);
-            const table = document.createElement('table');
-            table.style.width = '100%';
-            table.style.borderCollapse = 'collapse';
-            table.innerHTML = '<thead><tr>' + parsed[0].map(h => `<th style="border:1px solid #ccc; padding:8px; background:#f0f0f0">${h}</th>`).join('') + '</tr></thead>';
-            const tbody = document.createElement('tbody');
-            parsed.slice(1).forEach(row => {
-              const tr = document.createElement('tr');
-              row.forEach(col => {
-                const td = document.createElement('td');
-                td.textContent = col;
-                td.style.border = '1px solid #ccc';
-                td.style.padding = '8px';
-                tr.appendChild(td);
-              });
-              tbody.appendChild(tr);
+            data = JSON.parse(text);
+            if (!Array.isArray(data) || !Array.isArray(data[0])) throw new Error('Los datos recibidos no están en formato de matriz esperada.');
+          } catch (e) {
+            throw new Error('Respuesta no es JSON válido: ' + text);
+          }
+          const table = document.createElement('table');
+          table.innerHTML = '<thead><tr>' + data[0].map(h => `<th>${h}</th>`).join('') + '</tr></thead>';
+          const tbody = document.createElement('tbody');
+          data.slice(1).forEach(row => {
+            const tr = document.createElement('tr');
+            row.forEach(col => {
+              const td = document.createElement('td');
+              td.textContent = col;
+              tr.appendChild(td);
             });
-            table.appendChild(tbody);
-            const form = document.getElementById('formulario');
-            const existing = document.getElementById('tablaDatos');
-            if (existing) existing.remove();
-            const wrapper = document.createElement('div');
-            wrapper.id = 'tablaDatos';
-            wrapper.style.marginTop = '1rem';
-            wrapper.appendChild(table);
-            form.appendChild(wrapper);
-          } catch (error) {
-            console.error('Error al procesar los datos:', error);
-            alert('❌ Error al procesar los datos obtenidos');
+            tbody.appendChild(tr);
+          });
+          table.appendChild(tbody);
+          const existing = document.getElementById('tablaDatos');
+          if (existing) existing.remove();
+          const div = document.createElement('div');
+          div.id = 'tablaDatos';
+          div.appendChild(table);
+          document.getElementById('formulario').appendChild(div);
+        })
+        .catch(err => {
+          console.error('Error al obtener todos los datos:', err);
+          document.getElementById('mensajeError').textContent = '❌ Error al obtener todos los datos: ' + err.message;
+        });
+    }
+
+    function actualizarHorariosDisponibles() {
+      const especialidad = document.getElementById('especialidad').value;
+      const fecha = document.getElementById('fecha').value;
+      const horaSelect = document.getElementById('hora');
+      if (!especialidad || !fecha) return;
+
+      const url = `https://script.google.com/macros/s/AKfycbwODlQWO-BFuBMFvAc-RB_jBKqDmliJJ_QBFQi3zWNBgvehALHVBGJWZTg8RA7T4HQ/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
+      fetch(url)
+        .then(res => res.json())
+        .then(horasOcupadas => {
+          const opciones = generarOpcionesHorarios();
+          horaSelect.innerHTML = '<option value="">Selecciona una hora...</option>';
+          let disponibles = 0;
+          opciones.forEach(hora => {
+            if (!horasOcupadas.includes(hora)) {
+              const option = document.createElement('option');
+              option.value = hora;
+              option.textContent = hora;
+              horaSelect.appendChild(option);
+              disponibles++;
+            }
+          });
+          if (disponibles === 0) {
+            const option = document.createElement('option');
+            option.disabled = true;
+            option.selected = true;
+            option.textContent = 'No hay horarios disponibles';
+            horaSelect.appendChild(option);
+            document.querySelector('button[type="submit"]').disabled = true;
+          } else {
+            document.querySelector('button[type="submit"]').disabled = false;
           }
         })
         .catch(err => {
-          console.error('Error en prueba general:', err);
-          alert('❌ Error al obtener todos los datos');
-        });
-    }
-  
-    const especialidadInput = document.getElementById('especialidad');
-    const fechaInput = document.getElementById('fecha');
-    const horaSelect = document.getElementById('hora');
-
-    especialidadInput.addEventListener('change', actualizarHorariosDisponibles);
-    fechaInput.addEventListener('change', actualizarHorariosDisponibles);
-
-    function actualizarHorariosDisponibles() {
-      const especialidad = especialidadInput.value;
-      const fecha = fechaInput.value;
-
-      if (!especialidad || !fecha) return;
-
-      const url = `https://script.google.com/macros/s/AKfycbxGcQ1_liXu1JZvrEbsFE938URX9ZB9BymilzF8UsHVSBAFtGoqJ28b8E7BFofKG4Q/exec?especialidad=${encodeURIComponent(especialidad)}&fecha=${fecha}`;
-
-      fetch(url)
-        .then(res => res.json())
-        .then(ocupados => {
-          const todasLasHoras = generarHorarios('09:00', '18:00', 30);
-          const disponibles = todasLasHoras.filter(h => !ocupados.includes(h));
-
-          horaSelect.innerHTML = '<option value="">Selecciona una hora...</option>';
-          disponibles.forEach(h => {
-            const opt = document.createElement('option');
-            opt.value = opt.textContent = h;
-            horaSelect.appendChild(opt);
-          });
-
-          horaSelect.disabled = disponibles.length === 0;
-        })
-        .catch(err => {
-          console.error('Error obteniendo horarios:', err);
+          console.error('Error al consultar horarios ocupados:', err);
+          document.getElementById('mensajeError').textContent = '❌ Error al consultar horarios: ' + err.message;
         });
     }
 
-    function generarHorarios(inicio, fin, intervaloMin) {
-      const resultado = [];
-      const [hInicio, mInicio] = inicio.split(':').map(Number);
-      const [hFin, mFin] = fin.split(':').map(Number);
-
-      let fecha = new Date();
-      fecha.setHours(hInicio, mInicio, 0);
-      const limite = new Date();
-      limite.setHours(hFin, mFin, 0);
-
-      while (fecha <= limite) {
-        resultado.push(fecha.toTimeString().slice(0, 5));
-        fecha.setMinutes(fecha.getMinutes() + intervaloMin);
+    function generarOpcionesHorarios() {
+      const opciones = [];
+      for (let h = 9; h <= 17; h++) {
+        opciones.push(`${h.toString().padStart(2, '0')}:00`);
+        opciones.push(`${h.toString().padStart(2, '0')}:30`);
       }
-
-      return resultado;
+      return opciones;
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('formulario').addEventListener('submit', function(event) {
+    event.preventDefault();
+    if (!validarFormulario(event)) return;
+    const form = event.target;
+    const formData = new FormData(form);
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwODlQWO-BFuBMFvAc-RB_jBKqDmliJJ_QBFQi3zWNBgvehALHVBGJWZTg8RA7T4HQ/exec';
+    const submitButton = form.querySelector('button[type="submit"]');
+    const consultaButton = document.getElementById('consultarRegistros');
+    consultaButton.style.display = 'none';
+    submitButton.disabled = true;
+    submitButton.textContent = '⏳ Enviando...';
+    fetch(scriptURL, { method: 'POST', body: formData })
+      .then(res => res.text())
+      .then(result => {
+        if (result === 'success') {
+          const mensaje = document.createElement('div');
+          mensaje.textContent = '👍 Gracias, tu cita ha sido agendada. ⏳ Redirigiendo al inicio... 🎉 Te contactaremos pronto.';
+          mensaje.style.color = 'green';
+          mensaje.style.marginTop = '1rem';
+          mensaje.id = 'mensajeExito';
+          form.insertBefore(mensaje, form.firstChild);
+          form.reset();
+          console.log('✅ Cita enviada correctamente y formulario limpiado.');
+          actualizarHorariosDisponibles();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setTimeout(() => mensaje.remove(), 5000);
+          const confirmacion = document.createElement('div');
+          confirmacion.textContent = '✅ Confirmación: los datos fueron registrados correctamente en la hoja de cálculo.';
+          confirmacion.style.backgroundColor = '#e6f4ea';
+          confirmacion.style.color = '#137333';
+          confirmacion.style.padding = '1rem';
+          confirmacion.style.borderRadius = '6px';
+          confirmacion.style.border = '1px solid #a0d6b4';
+          confirmacion.style.marginTop = '1rem';
+          confirmacion.id = 'confirmacionHoja';
+          form.insertBefore(confirmacion, form.firstChild);
+          setTimeout(() => confirmacion.remove(), 5000);
+          probarConsultaGeneral();
+        } else {
+          document.getElementById('mensajeError').textContent = '❌ No se pudo registrar la cita. Intenta nuevamente.';
+        }
+        submitButton.disabled = false;
+        submitButton.textContent = 'Agendar cita';
+        consultaButton.style.display = 'inline-block';
+      })
+      .catch(err => {
+        console.error('Error al enviar formulario:', err);
+        document.getElementById('mensajeError').textContent = '❌ Error al enviar los datos: ' + err.message;
+        submitButton.disabled = false;
+      });
+  });
+      document.getElementById('especialidad').addEventListener('change', actualizarHorariosDisponibles);
+      document.getElementById('fecha').addEventListener('change', actualizarHorariosDisponibles);
+      document.getElementById('consultarRegistros').addEventListener('click', probarConsultaGeneral);
+    });
+  </script>
 </body>
 </html>
