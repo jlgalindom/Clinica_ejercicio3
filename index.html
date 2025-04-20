@@ -120,7 +120,7 @@
       const telefono = document.getElementById('telefono').value.trim();
       const correo = document.getElementById('correo').value.trim();
       const fecha = document.getElementById('fecha').value;
-      const hora = document.getElementById('hora').value;
+      const horaSeleccionada = document.getElementById('hora').value;
 
       if (!nombre || !telefono || !correo || !fecha || !hora) {
         ['nombre','telefono','correo','fecha','hora'].forEach(id => {
@@ -146,9 +146,9 @@
       const anio = nowCDMX.getFullYear();
       const mes = String(nowCDMX.getMonth() + 1).padStart(2, '0');
       const dia = String(nowCDMX.getDate()).padStart(2, '0');
-      const hora = String(nowCDMX.getHours()).padStart(2, '0');
+      const horaActual = String(nowCDMX.getHours()).padStart(2, '0');
       const minutos = String(nowCDMX.getMinutes()).padStart(2, '0');
-      const fechaEnvio = `${anio}-${mes}-${dia} ${hora}:${minutos}`;
+      const fechaEnvio = `${anio}-${mes}-${dia} ${horaActual}:${minutos}`;
       document.getElementById('fechaEnvio').value = fechaEnvio;
       const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
 const telefonoValido = /^\d{10}$/.test(telefono);
