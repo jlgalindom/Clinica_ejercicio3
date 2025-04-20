@@ -270,7 +270,7 @@ function probarConsultaHorarios() {
     alert('Por favor selecciona una fecha y especialidad antes de probar.');
     return;
   }
-  const url = `https://script.google.com/macros/s/AKfycbwuuzNLrmt0w7IYH2bg0OVaoD1HPXaHZZ73ZsGHFRABkLpSQ6x1ToyQOogA8P2dXsc/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
+  const url = `https://script.google.com/macros/s/AKfycbyl-bLyXY1IonxeTzRUQ-qryTTthJVSBGlczFej2rUzog30yAt17Jpm0UaRt07uvi0/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
   fetch(url)
     .then(res => res.json())
     .then(data => {
