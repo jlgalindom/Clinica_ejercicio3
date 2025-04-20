@@ -137,7 +137,8 @@
         ['nombre','telefono','correo','fecha','hora'].forEach(id => {
           document.getElementById(id).style.borderColor = '#ccc';
         });
-      document.getElementById('fechaEnvio').value = new Date().toISOString();
+      const fechaEnvio = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+      document.getElementById('fechaEnvio').value = fechaEnvio;
       const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
 const telefonoValido = /^\d{10}$/.test(telefono);
 
@@ -176,9 +177,14 @@ if (!telefonoValido) {
           const tbody = document.createElement('tbody');
           data.slice(1).forEach(row => {
             const tr = document.createElement('tr');
-            row.forEach(col => {
+            row.forEach((col, idx) => {
               const td = document.createElement('td');
-              td.textContent = col;
+              if (data[0][idx] === 'Fecha y hora de envío' && col) {
+                const fechaMX = new Date(col).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+                td.textContent = fechaMX;
+              } else {
+                td.textContent = col;
+              }
               tr.appendChild(td);
             });
             tbody.appendChild(tr);
@@ -260,14 +266,11 @@ if (!telefonoValido) {
     fetch(scriptURL, { method: 'POST', body: formData })
       .then(res => res.text())
       .then(result => {
-        if (result === 'success') {
-          const mensaje = document.createElement('div');
-          mensaje.textContent = '👍 Gracias, tu cita ha sido agendada. ⏳ Redirigiendo al inicio... 🎉 Te contactaremos pronto.';
-          mensaje.style.color = 'green';
-          mensaje.style.marginTop = '1rem';
-          mensaje.id = 'mensajeExito';
-          form.querySelector('button[type="submit"]').after(mensaje);
-          form.reset();
+        if (result === 'success') {$1form.reset();
+          const vistaPrevia = document.createElement('div');
+          const fechaHora = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+          vistaPrevia.innerHTML = `<p style='margin-top:1rem; background:#e7f1ff; color:#084298; padding:1rem; border-left:4px solid #0d6efd; border-radius:6px;'>📋 <strong>Vista previa:</strong> Cita registrada exitosamente el <strong>${fechaHora}</strong> (Hora local CDMX)</p>`;
+          form.querySelector('button[type="submit"]').after(vistaPrevia);
           console.log('✅ Cita enviada correctamente y formulario limpiado.');
           actualizarHorariosDisponibles();
           
