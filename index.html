@@ -64,10 +64,10 @@
   <form id="formulario">
     <label for="nombre">Nombre completo</label>
     <input id="nombre" name="Nombre completo" required>
-    <label for="telefono">Teléfono</label>
-    <input id="telefono" name="Teléfono" required>
-    <label for="correo">Correo electrónico</label>
-    <input id="correo" name="Correo electrónico" type="email" required>
+    $1
+<small id="telefonoError" style="color: red; display: block; margin-top: 4px;"></small>
+    $1
+<small id="correoError" style="color: red; display: block; margin-top: 4px;"></small>
     <label for="sexo">Sexo</label>
     <select id="sexo" name="Sexo" required>
       <option value="Femenino">Femenino</option>
@@ -81,8 +81,8 @@
       <option value="Pediatría">Pediatría</option>
       <option value="Medicina General">Medicina General</option>
     </select>
-    <label for="fecha">Fecha</label>
-    <input id="fecha" name="Fecha" type="date" required min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
+    $1
+<small id="fechaError" style="color: red; display: block; margin-top: 4px;"></small>
     <label for="hora">Hora</label>
     <select id="hora" name="Hora" required>
       <option value="">Selecciona una hora...</option>
@@ -102,14 +102,21 @@
       const fechaActual = new Date();
       const diaSeleccionado = new Date(fechaSeleccionada);
       const diaSemana = diaSeleccionado.getDay();
+      const maxFecha = new Date();
+      maxFecha.setDate(maxFecha.getDate() + 30);
       if (diaSeleccionado < fechaActual.setHours(0,0,0,0)) {
         document.getElementById('fecha').style.borderColor = 'red';
-        document.getElementById('mensajeError').textContent = '❌ No puedes agendar citas en fechas pasadas.';
+        document.getElementById('fechaError').textContent = '❌ No puedes agendar citas en fechas pasadas.';
+        return false;
+      }
+      if (diaSeleccionado > maxFecha) {
+        document.getElementById('fecha').style.borderColor = 'red';
+        document.getElementById('fechaError').textContent = '❌ Las citas solo se pueden agendar dentro de los próximos 30 días.';
         return false;
       }
       if (diaSemana === 0 || diaSemana === 6) {
         document.getElementById('fecha').style.borderColor = 'red';
-        document.getElementById('mensajeError').textContent = '❌ Las citas solo se pueden agendar de lunes a viernes.';
+        document.getElementById('fechaError').textContent = '❌ Las citas solo se pueden agendar de lunes a viernes.';
         return false;
       }
       const nombre = document.getElementById('nombre').value.trim();
@@ -135,26 +142,29 @@
         document.getElementById(id).style.borderColor = '#ccc';
       });
       document.getElementById('mensajeError').textContent = '';
+        document.getElementById('correoError').textContent = '';
+        document.getElementById('telefonoError').textContent = '';
+        document.getElementById('fechaError').textContent = '';
         ['nombre','telefono','correo','fecha','hora'].forEach(id => {
           document.getElementById(id).style.borderColor = '#ccc';
         });
       const ahora = new Date();
       const fechaEnvio = ahora.toLocaleString('sv-SE', { timeZone: 'America/Mexico_City' }).replace(',', '');
       document.getElementById('fechaEnvio').value = fechaEnvio;
-      document.getElementById('fecha').value = ahora.toLocaleDateString('sv-SE', { timeZone: 'America/Mexico_City' });
-      document.getElementById('hora').value = ahora.toLocaleTimeString('sv-SE', { timeZone: 'America/Mexico_City', hour: '2-digit', minute: '2-digit' });
+      
+      
       const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
 const telefonoValido = /^\d{10}$/.test(telefono);
 
 if (!correoValido) {
   document.getElementById('correo').style.borderColor = 'red';
-  document.getElementById('mensajeError').textContent = '❌ Ingresa un correo electrónico válido.';
+  document.getElementById('correoError').textContent = '❌ Ingresa un correo electrónico válido.';
   return false;
 }
 
 if (!telefonoValido) {
   document.getElementById('telefono').style.borderColor = 'red';
-  document.getElementById('mensajeError').textContent = '❌ El teléfono debe tener exactamente 10 dígitos numéricos.';
+  document.getElementById('telefonoError').textContent = '❌ El teléfono debe tener exactamente 10 dígitos numéricos.';
   return false;
 }
 
