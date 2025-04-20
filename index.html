@@ -65,8 +65,7 @@
     <label for="nombre">Nombre completo</label>
     <input id="nombre" name="Nombre completo" required>
     <small id="telefonoError" style="color: red; display: block; margin-top: 4px;"></small>
-    $1
-<small id="correoError" style="color: red; display: block; margin-top: 4px;"></small>
+    <small id="correoError" style="color: red; display: block; margin-top: 4px;"></small>
     <label for="sexo">Sexo</label>
     <select id="sexo" name="Sexo" required>
       <option value="Femenino">Femenino</option>
@@ -75,11 +74,16 @@
     </select>
     <label for="especialidad">Especialidad</label>
     <select id="especialidad" name="Especialidad" required>
+      <option value="">Selecciona una especialidad</option>
       <option value="Ginecología">Ginecología</option>
       <option value="Obstetricia">Obstetricia</option>
       <option value="Pediatría">Pediatría</option>
       <option value="Medicina General">Medicina General</option>
     </select>
+
+    <label for="fecha">Fecha</label>
+    <input id="fecha" name="Fecha" type="date" required min="" onfocus="this.min=new Date().toISOString().split('T')[0]; this.max=new Date(Date.now()+30*24*60*60*1000).toISOString().split('T')[0];">
+    <small id="fechaError" style="color: red; display: block; margin-top: 4px;"></small>
     $1
 <small id="fechaError" style="color: red; display: block; margin-top: 4px;"></small>
     <label for="hora">Hora</label>
