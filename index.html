@@ -98,7 +98,7 @@
   <script>
     function validarFormulario(event) {
       const fechaSeleccionada = document.getElementById('fecha').value;
-      const hoy = new Date();
+      
       const hoyCDMX = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
       hoyCDMX.setHours(0, 0, 0, 0);
       const diaSeleccionado = new Date(fechaSeleccionada);
@@ -215,6 +215,12 @@ if (!telefonoValido) {
       fetch(url)
         .then(res => res.json())
         .then(horasOcupadas => {
+          console.log('Horarios ocupados recibidos:', horasOcupadas);
+          if (!Array.isArray(horasOcupadas)) {
+          alert('❌ No se pudo obtener horarios disponibles desde el servidor.');
+          console.error('Respuesta inesperada de horarios:', horasOcupadas);
+            return;
+          }
           const opciones = generarOpcionesHorarios();
           horaSelect.innerHTML = '<option value="">Selecciona una hora...</option>';
           let disponibles = 0;
