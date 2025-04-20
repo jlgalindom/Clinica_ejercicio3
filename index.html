@@ -82,7 +82,7 @@
       <option value="Medicina General">Medicina General</option>
     </select>
     <label for="fecha">Fecha</label>
-    <input id="fecha" name="Fecha" type="date" required>
+    <input id="fecha" name="Fecha" type="date" required min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
     <label for="hora">Hora</label>
     <select id="hora" name="Hora" required>
       <option value="">Selecciona una hora...</option>
@@ -97,6 +97,20 @@
 
   <script>
     function validarFormulario(event) {
+      const fechaSeleccionada = document.getElementById('fecha').value;
+      const fechaActual = new Date();
+      const diaSeleccionado = new Date(fechaSeleccionada);
+      const diaSemana = diaSeleccionado.getDay();
+      if (diaSeleccionado < fechaActual.setHours(0,0,0,0)) {
+        document.getElementById('fecha').style.borderColor = 'red';
+        document.getElementById('mensajeError').textContent = '❌ No puedes agendar citas en fechas pasadas.';
+        return false;
+      }
+      if (diaSemana === 0 || diaSemana === 6) {
+        document.getElementById('fecha').style.borderColor = 'red';
+        document.getElementById('mensajeError').textContent = '❌ Las citas solo se pueden agendar de lunes a viernes.';
+        return false;
+      }
       const nombre = document.getElementById('nombre').value.trim();
       const telefono = document.getElementById('telefono').value.trim();
       const correo = document.getElementById('correo').value.trim();
@@ -120,6 +134,9 @@
         document.getElementById(id).style.borderColor = '#ccc';
       });
       document.getElementById('mensajeError').textContent = '';
+        ['nombre','telefono','correo','fecha','hora'].forEach(id => {
+          document.getElementById(id).style.borderColor = '#ccc';
+        });
       document.getElementById('fechaEnvio').value = new Date().toISOString();
       const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
 const telefonoValido = /^\d{10}$/.test(telefono);
@@ -249,11 +266,11 @@ if (!telefonoValido) {
           mensaje.style.color = 'green';
           mensaje.style.marginTop = '1rem';
           mensaje.id = 'mensajeExito';
-          form.insertBefore(mensaje, form.firstChild);
+          form.querySelector('button[type="submit"]').after(mensaje);
           form.reset();
           console.log('✅ Cita enviada correctamente y formulario limpiado.');
           actualizarHorariosDisponibles();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          
           setTimeout(() => mensaje.remove(), 5000);
           const confirmacion = document.createElement('div');
           confirmacion.textContent = '✅ Confirmación: los datos fueron registrados correctamente en la hoja de cálculo.';
@@ -264,9 +281,13 @@ if (!telefonoValido) {
           confirmacion.style.border = '1px solid #a0d6b4';
           confirmacion.style.marginTop = '1rem';
           confirmacion.id = 'confirmacionHoja';
-          form.insertBefore(confirmacion, form.firstChild);
+          form.querySelector('button[type="submit"]').after(confirmacion);
           setTimeout(() => confirmacion.remove(), 5000);
           probarConsultaGeneral();
+        } else if (result === 'duplicate') {
+          document.getElementById('mensajeError').textContent = '❌ Ya existe una cita registrada para esa especialidad en ese horario.';
+          submitButton.disabled = true;
+          submitButton.textContent = 'Cita duplicada';
         } else {
           document.getElementById('mensajeError').textContent = '❌ No se pudo registrar la cita. Intenta nuevamente.';
         }
@@ -280,8 +301,23 @@ if (!telefonoValido) {
         submitButton.disabled = false;
       });
   });
-      document.getElementById('especialidad').addEventListener('change', actualizarHorariosDisponibles);
-      document.getElementById('fecha').addEventListener('change', actualizarHorariosDisponibles);
+      document.getElementById('especialidad').addEventListener('change', () => {
+        document.getElementById('mensajeError').textContent = '';
+        document.querySelector('button[type="submit"]').disabled = false;
+        document.querySelector('button[type="submit"]').textContent = 'Agendar cita';
+        actualizarHorariosDisponibles();
+      });
+      document.getElementById('fecha').addEventListener('change', () => {
+        document.getElementById('mensajeError').textContent = '';
+        document.querySelector('button[type="submit"]').disabled = false;
+        document.querySelector('button[type="submit"]').textContent = 'Agendar cita';
+        actualizarHorariosDisponibles();
+      });
+      document.getElementById('hora').addEventListener('change', () => {
+        document.getElementById('mensajeError').textContent = '';
+        document.querySelector('button[type="submit"]').disabled = false;
+        document.querySelector('button[type="submit"]').textContent = 'Agendar cita';
+      });
       document.getElementById('consultarRegistros').addEventListener('click', probarConsultaGeneral);
     });
   </script>
