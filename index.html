@@ -201,7 +201,9 @@ if (!telefonoValido) {
                 const horas = String(fecha.getHours()).padStart(2, '0');
                 const minutos = String(fecha.getMinutes()).padStart(2, '0');
                 td.textContent = `${anio}-${mes}-${dia} ${horas}:${minutos}`;
-              });
+              } else {
+                td.textContent = col;
+              }
                 td.textContent = fechaMX;
               } else {
                 td.textContent = col;
