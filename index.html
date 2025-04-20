@@ -99,8 +99,7 @@
     function validarFormulario(event) {
       const fechaSeleccionada = document.getElementById('fecha').value;
       
-      const [anio, mes, dia] = fechaSeleccionada.split('-').map(Number);
-      const diaSeleccionado = new Date(Date.UTC(anio, mes - 1, dia));
+      const diaSeleccionado = new Date(`${fechaSeleccionada}T00:00:00-06:00`);
       const ahoraCDMX = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
       const referenciaHoy = new Date(Date.UTC(ahoraCDMX.getFullYear(), ahoraCDMX.getMonth(), ahoraCDMX.getDate()));
       const diaSemana = diaSeleccionado.getDay();
