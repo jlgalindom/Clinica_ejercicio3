@@ -100,7 +100,7 @@
           const now = new Date().toLocaleString();
           document.getElementById('timestamp').value = now;
           const formData = new FormData(form);
-          const scriptURL = 'https://script.google.com/macros/s/AKfycbyl-bLyXY1IonxeTzRUQ-qryTTthJVSBGlczFej2rUzog30yAt17Jpm0UaRt07uvi0/exec';
+          const scriptURL = 'https://script.google.com/macros/s/AKfycbylTMDrZEcEDZKsJ-qhLhMtXS3so4lfoJuZ0_fG4Xcs0-1XyK3TPaJPFAl5LXNI81o/exec';
 
           try {
             const response = await fetch(scriptURL, { method: 'POST', body: formData });
