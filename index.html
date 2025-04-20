@@ -169,7 +169,7 @@ if (!telefonoValido) {
     }
 
     function probarConsultaGeneral() {
-      const url = 'https://script.google.com/macros/s/AKfycbzgyxz6HI3Tm1moZRhbQb7YZcMGm3AoEU9JstApvYf10q6e23pLNUNrS6-U-uXHJEY/exec?test=all';
+      const url = 'https://script.google.com/macros/s/AKfycbzqZweb8VEgbAlaO7PjRkhDNiJ1dc409MBWliDIQzr4CsM3QOmH1PMfHTrzMB3pXJU/exec?test=all';
       fetch(url)
         .then(res => {
           if (!res.ok) throw new Error('Respuesta no válida del servidor');
@@ -190,8 +190,14 @@ if (!telefonoValido) {
             const tr = document.createElement('tr');
             row.forEach((col, idx) => {
               const td = document.createElement('td');
-              if (data[0][idx] === 'Fecha y hora de envío' && col) {
-                const fechaMX = new Date(col).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+              if (data[0][idx] === 'Fecha y hora de envío' && col && !isNaN(Date.parse(col))) {
+  const fechaMX = new Date(col).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+  td.textContent = fechaMX;
+} else if (data[0][idx] === 'Hora' && col) {
+  td.textContent = String(col).substring(0, 5);
+} else {
+  td.textContent = col;
+});
                 td.textContent = fechaMX;
               } else {
                 td.textContent = col;
@@ -220,7 +226,7 @@ if (!telefonoValido) {
       const horaSelect = document.getElementById('hora');
       if (!especialidad || !fecha) return;
 
-      const url = `https://script.google.com/macros/s/AKfycbwODlQWO-BFuBMFvAc-RB_jBKqDmliJJ_QBFQi3zWNBgvehALHVBGJWZTg8RA7T4HQ/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
+      const url = `https://script.google.com/macros/s/AKfycbzgyxz6HI3Tm1moZRhbQb7YZcMGm3AoEU9JstApvYf10q6e23pLNUNrS6-U-uXHJEY/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
       console.log('URL consultada para horarios:', url);
           const visorURL = document.createElement('div');
           visorURL.textContent = url;
