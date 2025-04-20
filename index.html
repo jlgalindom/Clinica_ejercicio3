@@ -1,215 +1,328 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clínica Gineco-Pediátrica</title>
   <style>
     body {
       font-family: sans-serif;
-      background-color: #fff0f5;
+      background-color: #fff8fa;
       margin: 0;
-      padding: 0;
-      text-align: center;
+      padding: 1rem;
     }
-    header img {
-      max-width: 100%;
-      border-bottom: 4px solid #db7093;
+    h1 {
+      text-align: center;
+      color: #c94f7c;
     }
     form {
-      background: #fff;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 500px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      border-radius: 15px;
+      max-width: 600px;
+      margin: auto;
+      padding: 1rem;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      background: white;
     }
-    input, select, textarea {
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    input, select, textarea, button {
       width: 100%;
-      margin-bottom: 10px;
-      padding: 10px;
-      border-radius: 10px;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border-radius: 5px;
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
     button {
-      background-color: #db7093;
+      margin-top: 1rem;
+      background-color: #c94f7c;
       color: white;
-      border: none;
-      padding: 10px;
-      width: 100%;
-      border-radius: 10px;
+      font-weight: bold;
       cursor: pointer;
     }
-    .error { color: red; font-size: 0.9em; text-align: left; }
-    .success { color: green; font-weight: bold; }
-    #modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
+    table {
+      width: 100%;
+      margin-top: 1rem;
+      border-collapse: collapse;
     }
-    #modal-content {
-      background: white;
-      padding: 20px;
-      max-height: 80%;
-      overflow-y: auto;
-      border-radius: 15px;
-      max-width: 90%;
+    th, td {
+      padding: 8px;
+      border: 1px solid #ccc;
+    }
+    th {
+      background-color: #f0f0f0;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada clínica">
-  </header>
+  <h1>Clínica Gineco-Pediátrica</h1>
+  <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada" style="display:block; margin:1rem auto; max-width:100%; border-radius:8px;">
+
   <form id="formulario">
-    <h2>Agendar cita</h2>
-    <input name="Nombre completo" placeholder="Nombre completo" required />
-    <div class="error" id="error-nombre"></div>
-    <input name="Teléfono" placeholder="Teléfono" maxlength="10" />
-    <div class="error" id="error-telefono"></div>
-    <input name="Correo electrónico" placeholder="Correo electrónico" type="email" />
-    <div class="error" id="error-correo"></div>
-    <select name="Sexo">
-      <option value="">Selecciona sexo</option>
+    <label for="nombre">Nombre completo</label>
+    <input id="nombre" name="Nombre completo" required>
+    <label for="telefono">Teléfono</label>
+    <input id="telefono" name="Teléfono" required>
+    <label for="correo">Correo electrónico</label>
+    <input id="correo" name="Correo electrónico" type="email" required>
+    <label for="sexo">Sexo</label>
+    <select id="sexo" name="Sexo" required>
       <option value="Femenino">Femenino</option>
       <option value="Masculino">Masculino</option>
       <option value="Otro">Otro</option>
     </select>
-    <div class="error" id="error-sexo"></div>
-    <select name="Especialidad">
-      <option value="">Selecciona especialidad</option>
+    <label for="especialidad">Especialidad</label>
+    <select id="especialidad" name="Especialidad" required>
       <option value="Ginecología">Ginecología</option>
+      <option value="Obstetricia">Obstetricia</option>
       <option value="Pediatría">Pediatría</option>
+      <option value="Medicina General">Medicina General</option>
     </select>
-    <div class="error" id="error-especialidad"></div>
-    <input name="Fecha" type="date" id="fecha" />
-    <div class="error" id="error-fecha"></div>
-    <select name="Hora" id="hora"></select>
-    <div class="error" id="error-hora"></div>
-    <textarea name="Comentarios adicionales" placeholder="Comentarios adicionales"></textarea>
-    <input name="Fecha y hora de envío" type="hidden" id="fechaEnvio" />
-    <button type="submit" id="submitBtn">Agendar cita</button>
-    <div class="success" id="success-message"></div>
+    <label for="fecha">Fecha</label>
+    <input id="fecha" name="Fecha" type="date" required min="" onfocus="this.min=new Date().toISOString().split('T')[0]">
+    <label for="hora">Hora</label>
+    <select id="hora" name="Hora" required>
+      <option value="">Selecciona una hora...</option>
+    </select>
+    <label for="comentarios">Comentarios adicionales</label>
+    <textarea id="comentarios" name="Comentarios adicionales"></textarea>
+    <input type="hidden" id="fechaEnvio" name="Fecha y hora de envío">
+    <button type="submit">Agendar cita</button>
+    <button type="button" id="consultarRegistros">🧪 Consultar todos los registros</button>
+    <div id="mensajeError" style="color: red; font-weight: bold; margin-top: 1rem;"></div>
   </form>
-  <button onclick="mostrarModal()">📋 Ver citas registradas</button>
-
-  <div id="modal">
-    <div id="modal-content">
-      <h3>📋 Citas registradas</h3>
-      <table border="1" style="width: 100%; text-align: left;"></table>
-      <button onclick="cerrarModal()">Cerrar</button>
-    </div>
-  </div>
 
   <script>
-    const form = document.getElementById('formulario');
-    const endpoint = 'https://script.google.com/macros/s/AKfycbwODlQWO-BFuBMFvAc-RB_jBKqDmliJJ_QBFQi3zWNBgvehALHVBGJWZTg8RA7T4HQ/exec';
-    const horaSelect = document.getElementById('hora');
-
-    function ajustarZonaHoraria(fecha = new Date()) {
-      return new Date(fecha.toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
-    }
-
-    function validarFecha(fechaStr) {
-      const fecha = new Date(fechaStr);
-      const hoy = ajustarZonaHoraria();
-      const maxFecha = new Date(hoy);
-      maxFecha.setDate(maxFecha.getDate() + 30);
-      const esValida = fecha >= hoy && fecha <= maxFecha && fecha.getDay() !== 0 && fecha.getDay() !== 6;
-      return esValida;
-    }
-
-    function cargarHorasDisponibles() {
-      const especialidad = form['Especialidad'].value;
-      const fecha = form['Fecha'].value;
-      if (!especialidad || !fecha || !validarFecha(fecha)) return;
-      fetch(`${endpoint}?especialidad=${especialidad}&fecha=${fecha}`)
-        .then(r => r.json())
-        .then(ocupadas => {
-          horaSelect.innerHTML = '';
-          for (let h = 9; h < 18.5; h += 0.5) {
-            const hora = `${String(Math.floor(h)).padStart(2, '0')}:${h % 1 === 0 ? '00' : '30'}`;
-            if (!ocupadas.includes(hora)) {
-              const opt = document.createElement('option');
-              opt.value = opt.text = hora;
-              horaSelect.add(opt);
-            }
-          }
-        });
-    }
-
-    form['Fecha'].addEventListener('change', cargarHorasDisponibles);
-    form['Especialidad'].addEventListener('change', cargarHorasDisponibles);
-
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      document.querySelectorAll('.error').forEach(el => el.textContent = '');
-      document.getElementById('success-message').textContent = '';
-      const data = new FormData(form);
-
-      const tel = data.get('Teléfono');
-      if (!/^\d{10}$/.test(tel)) {
-        document.getElementById('error-telefono').textContent = 'Teléfono inválido';
-        return;
+    function validarFormulario(event) {
+      const fechaSeleccionada = document.getElementById('fecha').value;
+      const fechaActual = new Date();
+      const diaSeleccionado = new Date(fechaSeleccionada);
+      const diaSemana = diaSeleccionado.getDay();
+      if (diaSeleccionado < fechaActual.setHours(0,0,0,0)) {
+        document.getElementById('fecha').style.borderColor = 'red';
+        document.getElementById('mensajeError').textContent = '❌ No puedes agendar citas en fechas pasadas.';
+        return false;
       }
-
-      const email = data.get('Correo electrónico');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        document.getElementById('error-correo').textContent = 'Correo inválido';
-        return;
+      if (diaSemana === 0 || diaSemana === 6) {
+        document.getElementById('fecha').style.borderColor = 'red';
+        document.getElementById('mensajeError').textContent = '❌ Las citas solo se pueden agendar de lunes a viernes.';
+        return false;
       }
+      const nombre = document.getElementById('nombre').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
+      const correo = document.getElementById('correo').value.trim();
+      const fecha = document.getElementById('fecha').value;
+      const hora = document.getElementById('hora').value;
 
-      if (!validarFecha(data.get('Fecha'))) {
-        document.getElementById('error-fecha').textContent = 'Fecha inválida';
-        return;
-      }
-
-      const fechaHoraCDMX = ajustarZonaHoraria().toLocaleString('es-MX');
-      data.set('Fecha y hora de envío', fechaHoraCDMX);
-
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-
-      fetch(endpoint, { method: 'POST', body: data })
-        .then(r => r.text())
-        .then(res => {
-          if (res === 'duplicate') {
-            document.getElementById('error-hora').textContent = 'Ya existe una cita con esa fecha y hora.';
+      if (!nombre || !telefono || !correo || !fecha || !hora) {
+        ['nombre','telefono','correo','fecha','hora'].forEach(id => {
+          const el = document.getElementById(id);
+          if (!el.value.trim()) {
+            el.style.borderColor = 'red';
           } else {
-            form.reset();
-            document.getElementById('success-message').textContent = '✅ Cita registrada con éxito';
-            cargarHorasDisponibles();
+            el.style.borderColor = '#ccc';
           }
-          btn.disabled = false;
-        })
-        .catch(() => {
-          document.getElementById('success-message').textContent = '❌ Error al registrar';
-          btn.disabled = false;
         });
-    });
+        document.getElementById('mensajeError').textContent = 'Por favor completa todos los campos obligatorios antes de enviar.';
+        event.preventDefault();
+        return false;
+      }
+      ['nombre','telefono','correo','fecha','hora'].forEach(id => {
+        document.getElementById(id).style.borderColor = '#ccc';
+      });
+      document.getElementById('mensajeError').textContent = '';
+        ['nombre','telefono','correo','fecha','hora'].forEach(id => {
+          document.getElementById(id).style.borderColor = '#ccc';
+        });
+      const fechaEnvio = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+      document.getElementById('fechaEnvio').value = fechaEnvio;
+      const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+const telefonoValido = /^\d{10}$/.test(telefono);
 
-    function mostrarModal() {
-      fetch(`${endpoint}?test=all`)
-        .then(r => r.json())
-        .then(data => {
-          const table = document.querySelector('#modal-content table');
-          table.innerHTML = '';
-          const [headers, ...rows] = data;
-          table.innerHTML = '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-          for (const row of rows) {
-            table.innerHTML += '<tr>' + row.map(cell => `<td>${cell}</td>`).join('') + '</tr>';
+if (!correoValido) {
+  document.getElementById('correo').style.borderColor = 'red';
+  document.getElementById('mensajeError').textContent = '❌ Ingresa un correo electrónico válido.';
+  return false;
+}
+
+if (!telefonoValido) {
+  document.getElementById('telefono').style.borderColor = 'red';
+  document.getElementById('mensajeError').textContent = '❌ El teléfono debe tener exactamente 10 dígitos numéricos.';
+  return false;
+}
+
+      return true;
+    }
+
+    function probarConsultaGeneral() {
+      const url = 'https://script.google.com/macros/s/AKfycbwODlQWO-BFuBMFvAc-RB_jBKqDmliJJ_QBFQi3zWNBgvehALHVBGJWZTg8RA7T4HQ/exec?test=all';
+      fetch(url)
+        .then(res => {
+          if (!res.ok) throw new Error('Respuesta no válida del servidor');
+          return res.text();
+        })
+        .then(text => {
+          let data;
+          try {
+            data = JSON.parse(text);
+            if (!Array.isArray(data) || !Array.isArray(data[0])) throw new Error('Los datos recibidos no están en formato de matriz esperada.');
+          } catch (e) {
+            throw new Error('Respuesta no es JSON válido: ' + text);
           }
-          document.getElementById('modal').style.display = 'flex';
+          const table = document.createElement('table');
+          table.innerHTML = '<thead><tr>' + data[0].map(h => `<th>${h}</th>`).join('') + '</tr></thead>';
+          const tbody = document.createElement('tbody');
+          data.slice(1).forEach(row => {
+            const tr = document.createElement('tr');
+            row.forEach((col, idx) => {
+              const td = document.createElement('td');
+              if (data[0][idx] === 'Fecha y hora de envío' && col) {
+                const fechaMX = new Date(col).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+                td.textContent = fechaMX;
+              } else {
+                td.textContent = col;
+              }
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          table.appendChild(tbody);
+          const existing = document.getElementById('tablaDatos');
+          if (existing) existing.remove();
+          const div = document.createElement('div');
+          div.id = 'tablaDatos';
+          div.appendChild(table);
+          document.getElementById('formulario').appendChild(div);
+        })
+        .catch(err => {
+          console.error('Error al obtener todos los datos:', err);
+          document.getElementById('mensajeError').textContent = '❌ Error al obtener todos los datos: ' + err.message;
         });
     }
-    function cerrarModal() {
-      document.getElementById('modal').style.display = 'none';
+
+    function actualizarHorariosDisponibles() {
+      const especialidad = document.getElementById('especialidad').value;
+      const fecha = document.getElementById('fecha').value;
+      const horaSelect = document.getElementById('hora');
+      if (!especialidad || !fecha) return;
+
+      const url = `https://script.google.com/macros/s/AKfycbwODlQWO-BFuBMFvAc-RB_jBKqDmliJJ_QBFQi3zWNBgvehALHVBGJWZTg8RA7T4HQ/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
+      fetch(url)
+        .then(res => res.json())
+        .then(horasOcupadas => {
+          const opciones = generarOpcionesHorarios();
+          horaSelect.innerHTML = '<option value="">Selecciona una hora...</option>';
+          let disponibles = 0;
+          opciones.forEach(hora => {
+            if (!horasOcupadas.includes(hora)) {
+              const option = document.createElement('option');
+              option.value = hora;
+              option.textContent = hora;
+              horaSelect.appendChild(option);
+              disponibles++;
+            }
+          });
+          if (disponibles === 0) {
+            const option = document.createElement('option');
+            option.disabled = true;
+            option.selected = true;
+            option.textContent = 'No hay horarios disponibles';
+            horaSelect.appendChild(option);
+            document.querySelector('button[type="submit"]').disabled = true;
+          } else {
+            document.querySelector('button[type="submit"]').disabled = false;
+          }
+        })
+        .catch(err => {
+          console.error('Error al consultar horarios ocupados:', err);
+          document.getElementById('mensajeError').textContent = '❌ Error al consultar horarios: ' + err.message;
+        });
     }
+
+    function generarOpcionesHorarios() {
+      const opciones = [];
+      for (let h = 9; h <= 17; h++) {
+        opciones.push(`${h.toString().padStart(2, '0')}:00`);
+        opciones.push(`${h.toString().padStart(2, '0')}:30`);
+      }
+      return opciones;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('formulario').addEventListener('submit', function(event) {
+    event.preventDefault();
+    if (!validarFormulario(event)) return;
+    const form = event.target;
+    const formData = new FormData(form);
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwODlQWO-BFuBMFvAc-RB_jBKqDmliJJ_QBFQi3zWNBgvehALHVBGJWZTg8RA7T4HQ/exec';
+    const submitButton = form.querySelector('button[type="submit"]');
+    const consultaButton = document.getElementById('consultarRegistros');
+    consultaButton.style.display = 'none';
+    submitButton.disabled = true;
+    submitButton.textContent = '⏳ Enviando...';
+    fetch(scriptURL, { method: 'POST', body: formData })
+      .then(res => res.text())
+      .then(result => {
+        if (result === 'success') {$1form.reset();
+          const vistaPrevia = document.createElement('div');
+          const fechaHora = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+          vistaPrevia.innerHTML = `<p style='margin-top:1rem; background:#e7f1ff; color:#084298; padding:1rem; border-left:4px solid #0d6efd; border-radius:6px;'>📋 <strong>Vista previa:</strong> Cita registrada exitosamente el <strong>${fechaHora}</strong> (Hora local CDMX)</p>`;
+          form.querySelector('button[type="submit"]').after(vistaPrevia);
+          console.log('✅ Cita enviada correctamente y formulario limpiado.');
+          actualizarHorariosDisponibles();
+          
+          setTimeout(() => mensaje.remove(), 5000);
+          const confirmacion = document.createElement('div');
+          confirmacion.textContent = '✅ Confirmación: los datos fueron registrados correctamente en la hoja de cálculo.';
+          confirmacion.style.backgroundColor = '#e6f4ea';
+          confirmacion.style.color = '#137333';
+          confirmacion.style.padding = '1rem';
+          confirmacion.style.borderRadius = '6px';
+          confirmacion.style.border = '1px solid #a0d6b4';
+          confirmacion.style.marginTop = '1rem';
+          confirmacion.id = 'confirmacionHoja';
+          form.querySelector('button[type="submit"]').after(confirmacion);
+          setTimeout(() => confirmacion.remove(), 5000);
+          probarConsultaGeneral();
+        } else if (result === 'duplicate') {
+          document.getElementById('mensajeError').textContent = '❌ Ya existe una cita registrada para esa especialidad en ese horario.';
+          submitButton.disabled = true;
+          submitButton.textContent = 'Cita duplicada';
+        } else {
+          document.getElementById('mensajeError').textContent = '❌ No se pudo registrar la cita. Intenta nuevamente.';
+        }
+        submitButton.disabled = false;
+        submitButton.textContent = 'Agendar cita';
+        consultaButton.style.display = 'inline-block';
+      })
+      .catch(err => {
+        console.error('Error al enviar formulario:', err);
+        document.getElementById('mensajeError').textContent = '❌ Error al enviar los datos: ' + err.message;
+        submitButton.disabled = false;
+      });
+  });
+      document.getElementById('especialidad').addEventListener('change', () => {
+        document.getElementById('mensajeError').textContent = '';
+        document.querySelector('button[type="submit"]').disabled = false;
+        document.querySelector('button[type="submit"]').textContent = 'Agendar cita';
+        actualizarHorariosDisponibles();
+      });
+      document.getElementById('fecha').addEventListener('change', () => {
+        document.getElementById('mensajeError').textContent = '';
+        document.querySelector('button[type="submit"]').disabled = false;
+        document.querySelector('button[type="submit"]').textContent = 'Agendar cita';
+        actualizarHorariosDisponibles();
+      });
+      document.getElementById('hora').addEventListener('change', () => {
+        document.getElementById('mensajeError').textContent = '';
+        document.querySelector('button[type="submit"]').disabled = false;
+        document.querySelector('button[type="submit"]').textContent = 'Agendar cita';
+      });
+      document.getElementById('consultarRegistros').addEventListener('click', probarConsultaGeneral);
+    });
   </script>
 </body>
 </html>
