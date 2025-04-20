@@ -152,7 +152,7 @@
           document.getElementById(id).style.borderColor = '#ccc';
         });
       const ahora = new Date();
-      const fechaEnvio = ahora.toLocaleString('sv-SE', { timeZone: 'America/Mexico_City' }).replace(',', '');
+      const fechaEnvio = new Date().toISOString();
       document.getElementById('fechaEnvio').value = fechaEnvio;
       
       
@@ -196,17 +196,7 @@ if (!telefonoValido) {
             const tr = document.createElement('tr');
             row.forEach((col, idx) => {
               const td = document.createElement('td');
-              if (data[0][idx] === 'Fecha y hora de envío' && col) {
-                const fecha = new Date(col);
-                const anio = fecha.getFullYear();
-                const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-                const dia = String(fecha.getDate()).padStart(2, '0');
-                const horas = String(fecha.getHours()).padStart(2, '0');
-                const minutos = String(fecha.getMinutes()).padStart(2, '0');
-                td.textContent = `${anio}-${mes}-${dia} ${horas}:${minutos}`;
-              } else {
-                td.textContent = col;
-              }
+              td.textContent = col;
                 td.textContent = fechaMX;
               } else {
                 td.textContent = col;
