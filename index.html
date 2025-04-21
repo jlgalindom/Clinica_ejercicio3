@@ -4,7 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Clínica Gineco-Pediátrica</title>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js">  const hoy = new Date();
+      const yyyy = hoy.getFullYear();
+      const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+      const dd = String(hoy.getDate()).padStart(2, '0');
+      document.getElementById('campoFecha').setAttribute('min', `${yyyy}-${mm}-${dd}`);
+
+      const selectHora = document.getElementById('campoHora');
+      const horas = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"];
+      horas.forEach(hora => {
+        const option = document.createElement('option');
+        option.value = hora;
+        option.textContent = hora;
+        selectHora.appendChild(option);
+      });
+
+    </script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -154,10 +169,10 @@
         </select>
 
         <label>Fecha</label>
-        <input name="Fecha" type="date" required />
+        <input name="Fecha" type="date" required min="{{today}}" id="campoFecha" />
 
         <label>Hora</label>
-        <input name="Hora" type="time" required />
+        <select name="Hora" required id="campoHora"></select>
 
         <label>Comentarios adicionales</label>
         <textarea name="Comentarios adicionales"></textarea>
@@ -222,6 +237,57 @@
 
   <script>
     window.addEventListener('DOMContentLoaded', () => {
+      const campoHora = document.getElementById('campoHora');
+      const campoFecha = document.getElementById('campoFecha');
+      const campoEspecialidad = document.querySelector('select[name="Especialidad"]');
+
+      async function actualizarHorariosDisponibles() {
+        const fecha = campoFecha.value;
+        const especialidad = campoEspecialidad.value;
+        if (!fecha || !especialidad) return;
+
+        // Consulta horarios ocupados
+        try {
+          const url = `https://script.google.com/macros/s/AKfycbx0tRY4Uv_NsSeccdujqcRI_X49GDMWX9MpF-Jasq8j7BHzabpIYl4ZMUbn2ZJyWBE/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
+          const res = await fetch(url);
+          const ocupados = await res.json();
+
+          // Generar horarios disponibles
+          const horas = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"];
+          campoHora.innerHTML = '';
+
+          horas.filter(h => !ocupados.includes(h)).forEach(hora => {
+            const option = document.createElement('option');
+            option.value = hora;
+            option.textContent = hora;
+            campoHora.appendChild(option);
+          });
+
+        } catch (err) {
+          console.error('Error al consultar horarios:', err);
+        }
+      }
+
+      campoFecha.addEventListener('change', () => {
+        const fechaSeleccionada = new Date(campoFecha.value + 'T00:00:00');
+        const hoy = new Date(); hoy.setHours(0,0,0,0);
+        const domingo = fechaSeleccionada.getDay() === 0;
+
+        const diasFeriados = [
+          '2025-01-01','2025-02-05','2025-03-21','2025-05-01','2025-09-16','2025-11-20','2025-12-25'
+        ];
+        const esFeriado = diasFeriados.includes(campoFecha.value);
+
+        if (fechaSeleccionada < hoy || domingo || esFeriado) {
+          alert('⚠️ Selecciona un día hábil. Domingos o días festivos no están disponibles.');
+          campoFecha.value = '';
+          campoHora.innerHTML = '';
+          return;
+        }
+        actualizarHorariosDisponibles();
+      });
+      campoEspecialidad.addEventListener('change', actualizarHorariosDisponibles);
+      actualizarHorariosDisponibles();
       const accordionButtons = document.querySelectorAll('.accordion-button');
       accordionButtons.forEach(btn => {
         btn.addEventListener('click', () => {
