@@ -5,56 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clínica Gineco-Pediátrica</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background-color: #fff8fa;
-      margin: 0;
-      padding: 1rem;
-    }
-    h1 {
-      text-align: center;
-      color: #c94f7c;
-    }
-    form {
-      max-width: 600px;
-      margin: auto;
-      padding: 1rem;
-      border: 1px solid #eee;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      background: white;
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-    }
-    input, select, textarea, button {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-    button {
-      margin-top: 1rem;
-      background-color: #c94f7c;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    table {
-      width: 100%;
-      margin-top: 1rem;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 8px;
-      border: 1px solid #ccc;
-    }
-    th {
-      background-color: #f0f0f0;
-    }
+    body { font-family: sans-serif; background-color: #fff8fa; margin: 0; padding: 1rem; }
+    h1 { text-align: center; color: #c94f7c; }
+    form { max-width: 600px; margin: auto; padding: 1rem; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); background: white; }
+    label { display: block; margin-top: 1rem; }
+    input, select, textarea, button { width: 100%; padding: 0.5rem; margin-top: 0.5rem; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+    button { margin-top: 1rem; background-color: #c94f7c; color: white; font-weight: bold; cursor: pointer; }
+    table { width: 100%; margin-top: 1rem; border-collapse: collapse; }
+    th, td { padding: 8px; border: 1px solid #ccc; }
+    th { background-color: #f0f0f0; }
+    small { display: block; margin-top: 4px; font-weight: normal; color: #666; }
+    .error { color: red; font-weight: bold; margin-top: 1rem; }
   </style>
 </head>
 <body>
@@ -74,8 +35,6 @@
       <option value="Masculino">Masculino</option>
       <option value="Otro">Otro</option>
     </select>
-    
-    <small id="horaError" style="color: red; display: block; margin-top: 4px;"></small>
     <label for="especialidad">Especialidad</label>
     <select id="especialidad" name="Especialidad" required>
       <option value="Ginecología">Ginecología</option>
@@ -84,307 +43,107 @@
       <option value="Medicina General">Medicina General</option>
     </select>
     <label for="fecha">Fecha</label>
-    <input id="fecha" name="Fecha" type="date" required min="" onfocus="this.min=new Date().toISOString().split('T')[0]; this.max=new Date(Date.now()+30*24*60*60*1000).toISOString().split('T')[0];">
-    <small id="diaSemanaTexto" style="display:block; margin-top:4px; font-weight:normal; color:#666;"></small>
+    <input id="fecha" name="Fecha" type="date" required onfocus="this.min=new Date().toISOString().split('T')[0]; this.max=new Date(Date.now()+30*24*60*60*1000).toISOString().split('T')[0];">
+    <small id="diaSemanaTexto"></small>
     <label for="hora">Hora</label>
-    <select id="hora" name="Hora" required aria-describedby="horaError">
+    <select id="hora" name="Hora" required>
       <option value="">Selecciona una hora...</option>
     </select>
+    <small id="horaError"></small>
     <label for="comentarios">Comentarios adicionales</label>
     <textarea id="comentarios" name="Comentarios adicionales"></textarea>
     <input type="hidden" id="fechaEnvio" name="Fecha y hora de envío">
     <button type="submit">Agendar cita</button>
     <button type="button" id="consultarRegistros">🧪 Consultar todos los registros</button>
-    <div id="mensajeError" style="color: red; font-weight: bold; margin-top: 1rem;"></div>
-  <button type="button" onclick="probarConsultaGeneral()">🧪 MiniTester: Consultar hoja</button>
-</form>
+    <button type="button" onclick="probarConsultaGeneral()">🧪 MiniTester: Consultar hoja</button>
+    <div id="mensajeError" class="error"></div>
+  </form>
 
   <script>
-    function validarFormulario(event) {
-      const fechaSeleccionada = document.getElementById('fecha').value;
-      
-      const diaSeleccionado = new Date(`${fechaSeleccionada}T00:00:00-06:00`);
-      const ahoraCDMX = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
-      const referenciaHoy = new Date(Date.UTC(ahoraCDMX.getFullYear(), ahoraCDMX.getMonth(), ahoraCDMX.getDate()));
-      const diaSemanaNombre = new Date(`${fechaSeleccionada}T00:00:00`).toLocaleDateString('es-MX', { weekday: 'long', timeZone: 'America/Mexico_City' }).toLowerCase();
-      if (diaSeleccionado < referenciaHoy) {
-        document.getElementById('fecha').style.borderColor = 'red';
-        document.getElementById('mensajeError').textContent = '❌ No puedes agendar citas en fechas pasadas.';
-        return false;
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby6B1XyYz0pwANd5RBzJSOqWj-UUxjl5ZGWeFfr8Ckudy48dtsJFFU_qeJTMv5VwnE/exec';
+
+    // Valida campos de formulario y controles de fecha
+    function validarFormulario(e) {
+      const formError = document.getElementById('mensajeError');
+      formError.textContent = '';
+      const fechaEl = document.getElementById('fecha');
+      const fechaVal = fechaEl.value;
+      const hoy = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
+      const sel = new Date(fechaVal + 'T00:00:00-06:00');
+      if (sel < new Date(hoy.toDateString())) {
+        formError.textContent = '❌ No puedes agendar citas en fechas pasadas.';
+        fechaEl.style.borderColor = 'red'; return false;
       }
-      if (diaSemanaNombre === 'sábado' || diaSemanaNombre === 'domingo') {
-        document.getElementById('fecha').style.borderColor = 'red';
-        document.getElementById('mensajeError').textContent = '❌ Las citas solo se pueden agendar de lunes a viernes.';
-        return false;
+      const diaNom = sel.toLocaleDateString('es-MX',{weekday:'long',timeZone:'America/Mexico_City'});
+      if (['sábado','domingo'].includes(diaNom)) {
+        formError.textContent = '❌ Las citas solo se pueden agendar de lunes a viernes.';
+        fechaEl.style.borderColor = 'red'; return false;
       }
-      const nombre = document.getElementById('nombre').value.trim();
-      const telefono = document.getElementById('telefono').value.trim();
-      const correo = document.getElementById('correo').value.trim();
-      const fecha = document.getElementById('fecha').value;
-      const horaSeleccionada = document.getElementById('hora').value;
-
-      if (!nombre || !telefono || !correo || !fecha || !hora) {
-        ['nombre','telefono','correo','fecha','hora'].forEach(id => {
-          const el = document.getElementById(id);
-          if (!el.value.trim()) {
-            el.style.borderColor = 'red';
-          } else {
-            el.style.borderColor = '#ccc';
-          }
-        });
-        document.getElementById('mensajeError').textContent = 'Por favor completa todos los campos obligatorios antes de enviar.';
-        event.preventDefault();
-        return false;
-      }
-      ['nombre','telefono','correo','fecha','hora'].forEach(id => {
-        document.getElementById(id).style.borderColor = '#ccc';
-      });
-      document.getElementById('mensajeError').textContent = '';
-        ['nombre','telefono','correo','fecha','hora'].forEach(id => {
-          document.getElementById(id).style.borderColor = '#ccc';
-        });
-      const nowCDMX = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
-      const anio = nowCDMX.getFullYear();
-      const mes = String(nowCDMX.getMonth() + 1).padStart(2, '0');
-      const dia = String(nowCDMX.getDate()).padStart(2, '0');
-      const horaActual = String(nowCDMX.getHours()).padStart(2, '0');
-      const minutos = String(nowCDMX.getMinutes()).padStart(2, '0');
-      const fechaEnvio = `${anio}-${mes}-${dia} ${horaActual}:${minutos}`;
-      document.getElementById('fechaEnvio').value = fechaEnvio;
-      const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
-const telefonoValido = /^\d{10}$/.test(telefono);
-
-if (!correoValido) {
-  document.getElementById('correo').style.borderColor = 'red';
-  document.getElementById('mensajeError').textContent = '❌ Ingresa un correo electrónico válido.';
-  return false;
-}
-
-if (!telefonoValido) {
-  document.getElementById('telefono').style.borderColor = 'red';
-  document.getElementById('mensajeError').textContent = '❌ El teléfono debe tener exactamente 10 dígitos numéricos.';
-  return false;
-}
-
       return true;
     }
 
+    // Consulta todos los registros y los muestra en una tabla
     function probarConsultaGeneral() {
-      const url = 'https://script.google.com/macros/s/AKfycby6B1XyYz0pwANd5RBzJSOqWj-UUxjl5ZGWeFfr8Ckudy48dtsJFFU_qeJTMv5VwnE/exec?test=all';
-      fetch(url)
-        .then(res => {
-          if (!res.ok) throw new Error('Respuesta no válida del servidor');
-          return res.text();
-        })
-        .then(text => {
-          let data;
-          try {
-            data = JSON.parse(text);
-            if (!Array.isArray(data) || !Array.isArray(data[0])) throw new Error('Los datos recibidos no están en formato de matriz esperada.');
-          } catch (e) {
-            throw new Error('Respuesta no es JSON válido: ' + text);
-          }
+      fetch(scriptURL + '?test=all')
+        .then(res => res.ok ? res.json() : Promise.reject('Error servidor'))
+        .then(data => {
           const table = document.createElement('table');
-          table.innerHTML = '<thead><tr>' + data[0].map(h => `<th>${h}</th>`).join('') + '</tr></thead>';
+          table.innerHTML = '<thead><tr>' + data[0].map(h=>`<th>${h}</th>`).join('') + '</tr></thead>';
           const tbody = document.createElement('tbody');
           data.slice(1).forEach(row => {
             const tr = document.createElement('tr');
-            row.forEach((col, idx) => {
+            row.forEach((col, i) => {
               const td = document.createElement('td');
-              if (data[0][idx] === 'Fecha y hora de envío' && col && !isNaN(Date.parse(col))) {
-                const fechaMX = new Date(col).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
-                td.textContent = fechaMX;
-              } else if (data[0][idx] === 'Hora' && col) {
-                td.textContent = String(col).substring(0, 5);
-              } else {
-                td.textContent = col;
-              }
-              tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
-          });
-  
-                td.textContent = fechaMX;
-              } else {
-                td.textContent = col;
-              }
+              const hdr = data[0][i];
+              if (hdr==='Fecha y hora de envío' && col) td.textContent = new Date(col).toLocaleString('es-MX',{timeZone:'America/Mexico_City'});
+              else if (hdr==='Hora'&&col) td.textContent = col.substr(0,5);
+              else td.textContent = col;
               tr.appendChild(td);
             });
             tbody.appendChild(tr);
           });
           table.appendChild(tbody);
-          const existing = document.getElementById('tablaDatos');
-          if (existing) existing.remove();
-          const div = document.createElement('div');
-          div.id = 'tablaDatos';
-          div.appendChild(table);
+          const ex = document.getElementById('tablaDatos'); if(ex) ex.remove();
+          const div = document.createElement('div'); div.id='tablaDatos'; div.appendChild(table);
           document.getElementById('formulario').appendChild(div);
         })
-        .catch(err => {
-          console.error('Error al obtener todos los datos:', err);
-          document.getElementById('mensajeError').textContent = '❌ Error al obtener todos los datos: ' + err.message;
-        });
+        .catch(err=> document.getElementById('mensajeError').textContent = '❌ '+err);
     }
 
+    // Actualiza opciones de horario excluyendo ocupados
     function actualizarHorariosDisponibles() {
-      const especialidad = document.getElementById('especialidad').value;
+      const esp = document.getElementById('especialidad').value;
       const fecha = document.getElementById('fecha').value;
-      const horaSelect = document.getElementById('hora');
-      if (!especialidad || !fecha) return;
-
-      const url = `https://script.google.com/macros/s/AKfycby6B1XyYz0pwANd5RBzJSOqWj-UUxjl5ZGWeFfr8Ckudy48dtsJFFU_qeJTMv5VwnE/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
-      console.log('URL consultada para horarios:', url);
-          const visorURL = document.createElement('div');
-          visorURL.textContent = url;
-          visorURL.style.fontSize = '0.85rem';
-          visorURL.style.background = '#f0f0f0';
-          visorURL.style.padding = '0.5rem';
-          visorURL.style.marginTop = '0.5rem';
-          visorURL.style.border = '1px dashed #ccc';
-          document.getElementById('formulario').appendChild(visorURL);
-          setTimeout(() => visorURL.remove(), 6000);
-      fetch(url)
-        .then(res => res.json())
-        .then(horasOcupadas => {
-          console.log('Horarios ocupados recibidos:', horasOcupadas);
-          if (!Array.isArray(horasOcupadas)) {
-          alert('❌ No se pudo obtener horarios disponibles desde el servidor.');
-          console.error('Respuesta inesperada de horarios:', horasOcupadas);
-            return;
-          }
-          const opciones = generarOpcionesHorarios();
-          const horasNormalizadas = horasOcupadas
-            .map(h => {
-              if (!h || typeof h !== 'string' || !h.includes(':')) return null;
-              const partes = h.trim().split(':');
-              if (partes.length >= 2) {
-                return `${partes[0].padStart(2, '0')}:${partes[1].padStart(2, '0')}`;
-              }
-              return null;
-            })
-            .filter(Boolean);
-          if (horasNormalizadas.length === 0) {
-            console.warn("⚠️ No hay horarios válidos disponibles desde el servidor.");
-            document.getElementById('horaError').textContent = '⚠️ No se pudieron cargar horarios válidos desde el servidor. Intenta cambiar la fecha o especialidad.';
-          }
-          horaSelect.innerHTML = '';
-          const defaultOption = document.createElement('option');
-          defaultOption.value = '';
-          defaultOption.textContent = 'Selecciona una hora...';
-          horaSelect.appendChild(defaultOption);
-          document.getElementById('horaError').textContent = '';
-          let disponibles = 0;
-          opciones.forEach(hora => {
-            if (!horasNormalizadas.includes(hora)) {
-              const option = document.createElement('option');
-              option.value = hora;
-              option.textContent = hora;
-              horaSelect.appendChild(option);
-              disponibles++;
-            }
-          });
-          if (disponibles === 0) {
-            const option = document.createElement('option');
-            option.disabled = true;
-            option.selected = true;
-            option.textContent = 'No hay horarios disponibles';
-            horaSelect.appendChild(option);
-            document.querySelector('button[type="submit"]').disabled = true;
-          } else {
-            document.querySelector('button[type="submit"]').disabled = false;
-          }
-        })
-        .catch(err => {
-          console.error('Error al consultar horarios ocupados:', err);
-          document.getElementById('mensajeError').textContent = '❌ Error al consultar horarios: ' + err.message;
-        });
+      const sel = document.getElementById('hora');
+      if (!esp||!fecha) return;
+      fetch(`${scriptURL}?fecha=${fecha}&especialidad=${encodeURIComponent(esp)}`)
+        .then(r=>r.json()).then(ocup=>{
+          sel.innerHTML='';
+          const opts = [];
+          for(let h=9;h<=17;h++){opts.push(`${h.toString().padStart(2,'0')}:00`,`${h.toString().padStart(2,'0')}:30`);}          
+          const disp = opts.filter(h=>!ocup.includes(h));
+          if(!disp.length){sel.innerHTML='<option>No hay horarios disponibles</option>';}
+          else disp.forEach(h=>sel.appendChild(new Option(h,h)));
+        }).catch(e=>document.getElementById('mensajeError').textContent='❌ '+e);
     }
 
-    function generarOpcionesHorarios() {
-      const opciones = [];
-      for (let h = 9; h <= 17; h++) {
-        opciones.push(`${h.toString().padStart(2, '0')}:00`);
-        opciones.push(`${h.toString().padStart(2, '0')}:30`);
-      }
-      return opciones;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-  actualizarHorariosDisponibles();
-  document.getElementById('formulario').addEventListener('submit', function(event) {
-    event.preventDefault();
-    if (!validarFormulario(event)) return;
-    const form = event.target;
-    const formData = new FormData(form);
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby6B1XyYz0pwANd5RBzJSOqWj-UUxjl5ZGWeFfr8Ckudy48dtsJFFU_qeJTMv5VwnE/exec';
-    const submitButton = form.querySelector('button[type="submit"]');
-    const consultaButton = document.getElementById('consultarRegistros');
-    consultaButton.style.display = 'none';
-    submitButton.disabled = true;
-    submitButton.textContent = '⏳ Enviando...';
-    fetch(scriptURL, { method: 'POST', body: formData })
-      .then(res => res.text())
-      .then(result => {
-        if (result === 'success') {form.reset();
-          document.getElementById('mensajeError').textContent = '';
-          const vistaPrevia = document.createElement('div');
-          const fechaHora = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
-          vistaPrevia.innerHTML = `<p style='margin-top:1rem; background:#e7f1ff; color:#084298; padding:1rem; border-left:4px solid #0d6efd; border-radius:6px;'>📋 <strong>Vista previa:</strong> Cita registrada exitosamente el <strong>${fechaHora}</strong> (Hora local CDMX)</p>`;
-          form.querySelector('button[type="submit"]').after(vistaPrevia);
-          console.log('✅ Cita enviada correctamente y formulario limpiado.');
-          actualizarHorariosDisponibles();
-          
-          setTimeout(() => mensaje.remove(), 5000);
-          const confirmacion = document.createElement('div');
-          confirmacion.textContent = '✅ Confirmación: los datos fueron registrados correctamente en la hoja de cálculo.';
-          confirmacion.style.backgroundColor = '#e6f4ea';
-          confirmacion.style.color = '#137333';
-          confirmacion.style.padding = '1rem';
-          confirmacion.style.borderRadius = '6px';
-          confirmacion.style.border = '1px solid #a0d6b4';
-          confirmacion.style.marginTop = '1rem';
-          confirmacion.id = 'confirmacionHoja';
-          form.querySelector('button[type="submit"]').after(confirmacion);
-          setTimeout(() => confirmacion.remove(), 5000);
-          probarConsultaGeneral();
-        } else if (result === 'duplicate') {
-          document.getElementById('mensajeError').textContent = '❌ Ya existe una cita registrada para esa especialidad en ese horario.';
-          submitButton.disabled = true;
-          submitButton.textContent = 'Cita duplicada';
-        } else {
-          document.getElementById('mensajeError').textContent = '❌ No se pudo registrar la cita. Intenta nuevamente.';
-        }
-        submitButton.disabled = false;
-        submitButton.textContent = 'Agendar cita';
-        consultaButton.style.display = 'inline-block';
-      })
-      .catch(err => {
-        console.error('Error al enviar formulario:', err);
-        document.getElementById('mensajeError').textContent = '❌ Error al enviar los datos: ' + err.message;
-        submitButton.disabled = false;
+    document.addEventListener('DOMContentLoaded',()=>{
+      actualizarHorariosDisponibles();
+      document.getElementById('especialidad').addEventListener('change',()=>{ actualizarHorariosDisponibles(); });
+      document.getElementById('fecha').addEventListener('change',()=>{ actualizarHorariosDisponibles(); });
+      document.getElementById('consultarRegistros').addEventListener('click',probarConsultaGeneral);
+      document.getElementById('formulario').addEventListener('submit',e=>{
+        e.preventDefault();
+        if(!validarFormulario(e)) return;
+        const btn = e.target.querySelector('button[type="submit"]'); btn.disabled=true;
+        const data = new FormData(e.target);
+        fetch(scriptURL,{method:'POST',body:data})
+          .then(r=>r.text()).then(res=>{
+            btn.disabled=false;
+            if(res==='success'){e.target.reset(); actualizarHorariosDisponibles();} 
+            else document.getElementById('mensajeError').textContent='❌ '+res;
+          }).catch(err=>document.getElementById('mensajeError').textContent='❌ '+err);
       });
-  });
-      document.getElementById('especialidad').addEventListener('change', () => {
-        document.getElementById('mensajeError').textContent = '';
-        document.querySelector('button[type="submit"]').disabled = false;
-        document.querySelector('button[type="submit"]').textContent = 'Agendar cita';
-        actualizarHorariosDisponibles();
-      });
-      document.getElementById('fecha').addEventListener('change', () => {
-        const fecha = document.getElementById('fecha').value;
-        const dia = new Date(`${fecha}T00:00:00`).toLocaleDateString('es-MX', { weekday: 'long', timeZone: 'America/Mexico_City' });
-        document.getElementById('diaSemanaTexto').textContent = `📅 Día seleccionado: ${dia.charAt(0).toUpperCase() + dia.slice(1)}`;
-        document.getElementById('mensajeError').textContent = '';
-        document.querySelector('button[type="submit"]').disabled = false;
-        document.querySelector('button[type="submit"]').textContent = 'Agendar cita';
-        actualizarHorariosDisponibles();
-      });
-      document.getElementById('hora').addEventListener('change', () => {
-        document.getElementById('mensajeError').textContent = '';
-        document.querySelector('button[type="submit"]').disabled = false;
-        document.querySelector('button[type="submit"]').textContent = 'Agendar cita';
-      });
-      document.getElementById('consultarRegistros').addEventListener('click', probarConsultaGeneral);
     });
   </script>
 </body>
