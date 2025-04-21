@@ -154,12 +154,47 @@
         .catch(err => document.getElementById('mensajeError').textContent = '❌ ' + err);
     });
 
-    // Botón de registros
+    // Botón de registros: muestra los registros en la página
     document.getElementById('consultarRegistros').addEventListener('click', () => {
       fetch(scriptURL + '?test=all')
         .then(r => r.json())
-        .then(data => console.log('Todos registros:', data))
-        .catch(err => console.error(err));
+        .then(data => {
+          // Remover tabla anterior si existe
+          const existing = document.getElementById('tablaRegistros');
+          if (existing) existing.remove();
+          // Crear tabla
+          const table = document.createElement('table');
+          table.id = 'tablaRegistros';
+          table.style.marginTop = '1rem';
+          // Encabezados
+          const thead = document.createElement('thead');
+          const headerRow = document.createElement('tr');
+          data[0].forEach(hdr => {
+            const th = document.createElement('th');
+            th.textContent = hdr;
+            headerRow.appendChild(th);
+          });
+          thead.appendChild(headerRow);
+          table.appendChild(thead);
+          // Filas de datos
+          const tbody = document.createElement('tbody');
+          data.slice(1).forEach(row => {
+            const tr = document.createElement('tr');
+            row.forEach((col, idx) => {
+              const td = document.createElement('td');
+              td.textContent = col;
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          table.appendChild(tbody);
+          // Insertar después del formulario
+          document.getElementById('formulario').appendChild(table);
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById('mensajeError').textContent = '❌ Error al consultar registros.';
+        });
     });
 
     // Eventos iniciales
