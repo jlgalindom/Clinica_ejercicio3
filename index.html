@@ -270,7 +270,7 @@
 
       campoFecha.addEventListener('change', () => {
         const [y, m, d] = campoFecha.value.split('-');
-        const fechaSeleccionada = new Date(Number(y), Number(m) + 1, Number(d));
+        const fechaSeleccionada = new Date(Number(y), Number(m) - 1, Number(d));
         const hoy = new Date(); hoy.setHours(0,0,0,0);
         const domingo = fechaSeleccionada.getDay() === 0;
 
@@ -312,7 +312,8 @@
           const formData = new FormData(form);
           const fechaSeleccionada = document.getElementById('campoFecha').value;
           const [yy, mm, dd] = fechaSeleccionada.split("-");
-          const fechaFormateada = `${yy}-${mm}-${dd}`;
+          const fechaCita = new Date(Number(yy), Number(mm) - 1, Number(dd));
+          const fechaFormateada = fechaCita.toISOString().split('T')[0];
           formData.set('Fecha', fechaFormateada);
           const scriptURL = 'https://script.google.com/macros/s/AKfycbx0tRY4Uv_NsSeccdujqcRI_X49GDMWX9MpF-Jasq8j7BHzabpIYl4ZMUbn2ZJyWBE/exec';
 
