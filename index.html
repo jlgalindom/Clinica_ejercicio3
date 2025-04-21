@@ -312,6 +312,8 @@
           const formData = new FormData(form);
           console.log('📤 Enviando formulario con datos:', Object.fromEntries(formData.entries()));
           const mensajeLog = document.createElement('div');
+          mensajeLog.style.opacity = '0';
+          mensajeLog.style.transition = 'opacity 0.5s ease';
           mensajeLog.style.marginTop = '1rem';
           mensajeLog.style.padding = '1rem';
           mensajeLog.style.border = '1px solid #ccc';
@@ -320,6 +322,7 @@
           mensajeLog.innerHTML = '<strong>Datos enviados al servidor:</strong><br>' +
             Object.entries(Object.fromEntries(formData.entries())).map(([k,v]) => `<strong>${k}</strong>: ${v}`).join('<br>');
           document.getElementById('formulario').appendChild(mensajeLog);
+          setTimeout(() => { mensajeLog.style.opacity = '1'; }, 50);
           const fechaSeleccionada = document.getElementById('campoFecha').value;
           const [yy, mm, dd] = fechaSeleccionada.split("-");
           const fechaFormateada = `${yy}-${mm}-${dd}`;
@@ -333,11 +336,21 @@
               alert('❌ Ya existe una cita registrada con ese nombre, fecha y hora.');
               return;
             }
-            document.getElementById('mensajeExito').style.display = 'block';
+            const mensajeExito = document.getElementById('mensajeExito');
+            mensajeExito.style.display = 'block';
+            mensajeExito.style.opacity = '0';
+            mensajeExito.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => { mensajeExito.style.opacity = '1'; }, 50);
             form.reset();
             setTimeout(() => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
-              document.getElementById('mensajeExito').style.display = 'none';
+              mensajeExito.style.opacity = '0';
+              setTimeout(() => { mensajeExito.style.display = 'none'; }, 300);
+              const logInfo = document.querySelector('#formulario div[style*="Datos enviados al servidor"]');
+              if (logInfo) {
+                logInfo.style.opacity = '0';
+                setTimeout(() => logInfo.remove(), 300);
+              }
             }, 3000);
             
             if (typeof drawChart === 'function') drawChart();
