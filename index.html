@@ -312,6 +312,7 @@
           const formData = new FormData(form);
           console.log('📤 Enviando formulario con datos:', Object.fromEntries(formData.entries()));
           const mensajeLog = document.createElement('div');
+          mensajeLog.id = 'logEnvio';
           mensajeLog.style.opacity = '0';
           mensajeLog.style.transition = 'opacity 0.5s ease';
           mensajeLog.style.marginTop = '1rem';
@@ -322,6 +323,7 @@
           mensajeLog.innerHTML = '<strong>Datos enviados al servidor:</strong><br>' +
             Object.entries(Object.fromEntries(formData.entries())).map(([k,v]) => `<strong>${k}</strong>: ${v}`).join('<br>');
           document.getElementById('formulario').appendChild(mensajeLog);
+          setTimeout(() => { mensajeLog.style.opacity = '1'; }, 50);
           setTimeout(() => { mensajeLog.style.opacity = '1'; }, 50);
           const fechaSeleccionada = document.getElementById('campoFecha').value;
           const [yy, mm, dd] = fechaSeleccionada.split("-");
@@ -346,7 +348,7 @@
               window.scrollTo({ top: 0, behavior: 'smooth' });
               mensajeExito.style.opacity = '0';
               setTimeout(() => { mensajeExito.style.display = 'none'; }, 300);
-              const logInfo = document.querySelector('#formulario div[style*="Datos enviados al servidor"]');
+              const logInfo = document.getElementById('logEnvio');
               if (logInfo) {
                 logInfo.style.opacity = '0';
                 setTimeout(() => logInfo.remove(), 300);
