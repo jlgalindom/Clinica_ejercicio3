@@ -310,6 +310,11 @@
           const now = new Date().toLocaleString('sv-SE', { timeZone: 'America/Mexico_City' }).replace(' ', 'T');
           document.getElementById('timestamp').value = now;
           const formData = new FormData(form);
+          const fechaSeleccionada = document.getElementById('campoFecha').value;
+          const [yy, mm, dd] = fechaSeleccionada.split("-");
+          const fechaCita = new Date(Number(yy), Number(mm) - 1, Number(dd));
+          const fechaFormateada = fechaCita.toLocaleDateString('sv-SE', { timeZone: 'America/Mexico_City' });
+          formData.set('Fecha', fechaFormateada);
           const scriptURL = 'https://script.google.com/macros/s/AKfycbx0tRY4Uv_NsSeccdujqcRI_X49GDMWX9MpF-Jasq8j7BHzabpIYl4ZMUbn2ZJyWBE/exec';
 
           try {
