@@ -198,7 +198,7 @@
           container.innerHTML = "<em>Cargando...</em>";
           document.getElementById("popupCitas").style.display = "block";
           try {
-            const res = await fetch("https://script.google.com/macros/s/AKfycbwEiI8bgjnePX5RN86JFFDk7lEPmYghPSPcUuFTXwH-40-N8AtQ4diIZtrIaTsmArI/exec?test=all");
+            const res = await fetch("https://script.google.com/macros/s/AKfycbyotitsEUnQLpb2d3TmUauoNuml0CF0R5jwHmQPUmkxnJhUXHajDMegXHVhiCqpxj0/exec?test=all");
             const data = await res.json();
             if (!data || !Array.isArray(data) || data.length < 2) {
               container.innerHTML = "<p>No hay registros disponibles.</p>";
@@ -248,7 +248,7 @@
 
         // Consulta horarios ocupados
         try {
-          const url = `https://script.google.com/macros/s/AKfycbwEiI8bgjnePX5RN86JFFDk7lEPmYghPSPcUuFTXwH-40-N8AtQ4diIZtrIaTsmArI/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
+          const url = `https://script.google.com/macros/s/AKfycbyotitsEUnQLpb2d3TmUauoNuml0CF0R5jwHmQPUmkxnJhUXHajDMegXHVhiCqpxj0/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
           const res = await fetch(url);
           const ocupados = await res.json();
 
@@ -324,7 +324,7 @@
           const [yy, mm, dd] = fechaSeleccionada.split("-");
           const fechaFormateada = `${yy}-${mm}-${dd}`;
           formData.set('Fecha', fechaFormateada);
-          const scriptURL = 'https://script.google.com/macros/s/AKfycbwEiI8bgjnePX5RN86JFFDk7lEPmYghPSPcUuFTXwH-40-N8AtQ4diIZtrIaTsmArI/exec';
+          const scriptURL = 'https://script.google.com/macros/s/AKfycbyotitsEUnQLpb2d3TmUauoNuml0CF0R5jwHmQPUmkxnJhUXHajDMegXHVhiCqpxj0/exec';
 
           try {
             const response = await fetch(scriptURL, { method: 'POST', body: formData });
