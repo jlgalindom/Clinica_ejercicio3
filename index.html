@@ -65,12 +65,14 @@
     <button type="submit">Agendar cita</button>
     <button type="button" id="consultarRegistros">🧪 Consultar registros</button>
     <div id="mensajeError" class="error"></div>
-  document.getElementById('tablaContainer').appendChild(table)
+  </form>
+
+  <!-- Contenedor dinámico para mostrar la tabla -->
+  <div id="tablaContainer" style="max-width: 600px; margin: 1rem auto;"></div>
 
   <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycby6B1XyYz0pwANd5RBzJSOqWj-UUxjl5ZGWeFfr8Ckudy48dtsJFFU_qeJTMv5VwnE/exec';
 
-    // Inicializar fecha con hoy para permitir carga de horarios al inicio
     function initFecha() {
       const fechaEl = document.getElementById('fecha');
       const hoy = new Date().toISOString().split('T')[0];
@@ -78,7 +80,6 @@
       document.getElementById('diaSemanaTexto').textContent = '';
     }
 
-    // Valida fecha no pasada y sólo días de semana
     function validarFecha() {
       const errorDiv = document.getElementById('mensajeError');
       errorDiv.textContent = '';
@@ -99,7 +100,6 @@
       return true;
     }
 
-    // Carga y muestra horarios disponibles
     function actualizarHorariosDisponibles() {
       const esp = document.getElementById('especialidad').value;
       const fecha = document.getElementById('fecha').value;
@@ -130,7 +130,6 @@
         .catch(err => document.getElementById('mensajeError').textContent = '❌ ' + err);
     }
 
-    // Enviar formulario al backend
     document.getElementById('formulario').addEventListener('submit', e => {
       e.preventDefault();
       document.getElementById('mensajeError').textContent = '';
@@ -154,19 +153,15 @@
         .catch(err => document.getElementById('mensajeError').textContent = '❌ ' + err);
     });
 
-    // Botón de registros: muestra los registros en la página
     document.getElementById('consultarRegistros').addEventListener('click', () => {
       fetch(scriptURL + '?test=all')
         .then(r => r.json())
         .then(data => {
-          // Remover tabla anterior si existe
           const existing = document.getElementById('tablaRegistros');
           if (existing) existing.remove();
-          // Crear tabla
           const table = document.createElement('table');
           table.id = 'tablaRegistros';
           table.style.marginTop = '1rem';
-          // Encabezados
           const thead = document.createElement('thead');
           const headerRow = document.createElement('tr');
           data[0].forEach(hdr => {
@@ -176,7 +171,6 @@
           });
           thead.appendChild(headerRow);
           table.appendChild(thead);
-          // Filas de datos
           const tbody = document.createElement('tbody');
           data.slice(1).forEach(row => {
             const tr = document.createElement('tr');
@@ -188,8 +182,7 @@
             tbody.appendChild(tr);
           });
           table.appendChild(tbody);
-          // Insertar después del formulario
-          document.getElementById('formulario').appendChild(table);
+          document.getElementById('tablaContainer').appendChild(table);
         })
         .catch(err => {
           console.error(err);
@@ -197,7 +190,6 @@
         });
     });
 
-    // Eventos iniciales
     window.addEventListener('DOMContentLoaded', () => {
       initFecha();
       actualizarHorariosDisponibles();
