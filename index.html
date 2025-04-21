@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clínica Gineco-Pediátrica</title>
+  <!-- Favicon para evitar 404 -->
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   <style>
     body { font-family: sans-serif; background-color: #fff8fa; margin: 0; padding: 1rem; }
     h1 { text-align: center; color: #c94f7c; }
@@ -66,16 +68,22 @@
   </form>
 
   <script>
-    // Endpoint Google Apps Script
     const scriptURL = 'https://script.google.com/macros/s/AKfycby6B1XyYz0pwANd5RBzJSOqWj-UUxjl5ZGWeFfr8Ckudy48dtsJFFU_qeJTMv5VwnE/exec';
 
-    // Función para validar fecha: no pasadas, sólo lunes a viernes
+    // Inicializar fecha con hoy para permitir carga de horarios al inicio
+    function initFecha() {
+      const fechaEl = document.getElementById('fecha');
+      const hoy = new Date().toISOString().split('T')[0];
+      fechaEl.value = hoy;
+      document.getElementById('diaSemanaTexto').textContent = '';
+    }
+
+    // Valida fecha no pasada y sólo días de semana
     function validarFecha() {
       const errorDiv = document.getElementById('mensajeError');
       errorDiv.textContent = '';
       const fechaEl = document.getElementById('fecha');
       const valor = fechaEl.value;
-      if (!valor) return false;
       const hoy = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Mexico_City'}));
       const sel = new Date(valor + 'T00:00:00-06:00');
       if (sel < new Date(hoy.toDateString())) {
@@ -83,6 +91,7 @@
         return false;
       }
       const dia = sel.toLocaleDateString('es-MX',{weekday:'long',timeZone:'America/Mexico_City'});
+      document.getElementById('diaSemanaTexto').textContent = dia;
       if (['sábado','domingo'].includes(dia)) {
         errorDiv.textContent = '❌ Sólo de lunes a viernes.';
         return false;
@@ -90,22 +99,22 @@
       return true;
     }
 
-    // Actualiza horarios disponibles
+    // Carga y muestra horarios disponibles
     function actualizarHorariosDisponibles() {
       const esp = document.getElementById('especialidad').value;
       const fecha = document.getElementById('fecha').value;
       const horaSel = document.getElementById('hora');
       if (!esp || !fecha) return;
+      console.log('Consultando horarios para', esp, fecha);
       fetch(`${scriptURL}?fecha=${fecha}&especialidad=${encodeURIComponent(esp)}`)
         .then(res => res.json())
         .then(ocup => {
-          // Generar intervalos de 30m entre 09:00 y 17:30
+          console.log('Horarios ocupados:', ocup);
           const opciones = [];
           for (let h = 9; h < 18; h++) {
             opciones.push(`${String(h).padStart(2,'0')}:00`);
             opciones.push(`${String(h).padStart(2,'0')}:30`);
           }
-          // Limpiar select
           horaSel.innerHTML = '';
           const disponibles = opciones.filter(h => !ocup.includes(h));
           if (disponibles.length === 0) {
@@ -121,19 +130,20 @@
         .catch(err => document.getElementById('mensajeError').textContent = '❌ ' + err);
     }
 
-    // Enviar formulario
+    // Enviar formulario al backend
     document.getElementById('formulario').addEventListener('submit', e => {
       e.preventDefault();
       document.getElementById('mensajeError').textContent = '';
       if (!validarFecha()) return;
       const form = e.target;
-      actualizarHorariosDisponibles();
       const data = new FormData(form);
       fetch(scriptURL, { method: 'POST', body: data })
         .then(r => r.text())
         .then(res => {
+          console.log('Respuesta POST:', res);
           if (res === 'success') {
             form.reset();
+            initFecha();
             actualizarHorariosDisponibles();
           } else if (res === 'duplicate') {
             document.getElementById('mensajeError').textContent = '❌ Cita duplicada.';
@@ -144,20 +154,21 @@
         .catch(err => document.getElementById('mensajeError').textContent = '❌ ' + err);
     });
 
-    // Botón para consultar registros (solo consola)
+    // Botón de registros
     document.getElementById('consultarRegistros').addEventListener('click', () => {
       fetch(scriptURL + '?test=all')
         .then(r => r.json())
-        .then(data => console.log(data))
+        .then(data => console.log('Todos registros:', data))
         .catch(err => console.error(err));
     });
 
-    // Actualizar horarios al cambiar especialidad o fecha
-    document.getElementById('especialidad').addEventListener('change', actualizarHorariosDisponibles);
-    document.getElementById('fecha').addEventListener('change', actualizarHorariosDisponibles);
-
-    // Inicializar al cargar
-    window.addEventListener('DOMContentLoaded', actualizarHorariosDisponibles);
+    // Eventos iniciales
+    window.addEventListener('DOMContentLoaded', () => {
+      initFecha();
+      actualizarHorariosDisponibles();
+      document.getElementById('especialidad').addEventListener('change', actualizarHorariosDisponibles);
+      document.getElementById('fecha').addEventListener('change', () => { initFecha(); actualizarHorariosDisponibles(); });
+    });
   </script>
 </body>
 </html>
