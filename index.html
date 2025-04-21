@@ -310,6 +310,16 @@
           const now = new Date().toLocaleString('sv-SE', { timeZone: 'America/Mexico_City' }).replace(' ', 'T');
           document.getElementById('timestamp').value = now;
           const formData = new FormData(form);
+          console.log('📤 Enviando formulario con datos:', Object.fromEntries(formData.entries()));
+          const mensajeLog = document.createElement('div');
+          mensajeLog.style.marginTop = '1rem';
+          mensajeLog.style.padding = '1rem';
+          mensajeLog.style.border = '1px solid #ccc';
+          mensajeLog.style.background = '#f3f3f3';
+          mensajeLog.style.borderRadius = '8px';
+          mensajeLog.innerHTML = '<strong>Datos enviados al servidor:</strong><br>' +
+            Object.entries(Object.fromEntries(formData.entries())).map(([k,v]) => `<strong>${k}</strong>: ${v}`).join('<br>');
+          document.getElementById('formulario').appendChild(mensajeLog);
           const fechaSeleccionada = document.getElementById('campoFecha').value;
           const [yy, mm, dd] = fechaSeleccionada.split("-");
           const fechaCita = new Date(Date.UTC(Number(yy), Number(mm) - 1, Number(dd)));
