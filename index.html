@@ -169,7 +169,7 @@ if (!telefonoValido) {
     }
 
     function probarConsultaGeneral() {
-      const url = 'https://script.google.com/macros/s/AKfycbxqm-FSWLBaAV3yBhROTYD4Pr-DFLau_uzeStVxR15htgcfqwegwiGNbnQ7AyVvlw/exec?test=all';
+      const url = 'https://script.google.com/macros/s/AKfycbwU0ydXWV6m-4rjKca6p9NiiHwO6u0phvwpuGTVdKx-fa6Lh0uQw18mc7pqj27Qne8/exec?test=all';
       fetch(url)
         .then(res => {
           if (!res.ok) throw new Error('Respuesta no válida del servidor');
@@ -315,7 +315,7 @@ if (!telefonoValido) {
     if (!validarFormulario(event)) return;
     const form = event.target;
     const formData = new FormData(form);
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzqZweb8VEgbAlaO7PjRkhDNiJ1dc409MBWliDIQzr4CsM3QOmH1PMfHTrzMB3pXJU/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwzm4j3g4rDRYA14w9YMc4PkjNV1F-8h6YD_e3fimwSaxPCQwAz0SFVzNQ811YEenY/exec';
     const submitButton = form.querySelector('button[type="submit"]');
     const consultaButton = document.getElementById('consultarRegistros');
     consultaButton.style.display = 'none';
