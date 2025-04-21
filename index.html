@@ -11,9 +11,6 @@
     label { display: block; margin-top: 1rem; }
     input, select, textarea, button { width: 100%; padding: 0.5rem; margin-top: 0.5rem; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
     button { margin-top: 1rem; background-color: #c94f7c; color: white; font-weight: bold; cursor: pointer; }
-    table { width: 100%; margin-top: 1rem; border-collapse: collapse; }
-    th, td { padding: 8px; border: 1px solid #ccc; }
-    th { background-color: #f0f0f0; }
     small { display: block; margin-top: 4px; font-weight: normal; color: #666; }
     .error { color: red; font-weight: bold; margin-top: 1rem; }
   </style>
@@ -25,16 +22,20 @@
   <form id="formulario">
     <label for="nombre">Nombre completo</label>
     <input id="nombre" name="Nombre completo" required>
+
     <label for="telefono">Teléfono</label>
     <input id="telefono" name="Teléfono" required>
+
     <label for="correo">Correo electrónico</label>
     <input id="correo" name="Correo electrónico" type="email" required>
+
     <label for="sexo">Sexo</label>
     <select id="sexo" name="Sexo" required>
       <option value="Femenino">Femenino</option>
       <option value="Masculino">Masculino</option>
       <option value="Otro">Otro</option>
     </select>
+
     <label for="especialidad">Especialidad</label>
     <select id="especialidad" name="Especialidad" required>
       <option value="Ginecología">Ginecología</option>
@@ -42,109 +43,121 @@
       <option value="Pediatría">Pediatría</option>
       <option value="Medicina General">Medicina General</option>
     </select>
+
     <label for="fecha">Fecha</label>
-    <input id="fecha" name="Fecha" type="date" required onfocus="this.min=new Date().toISOString().split('T')[0]; this.max=new Date(Date.now()+30*24*60*60*1000).toISOString().split('T')[0];">
+    <input id="fecha" name="Fecha" type="date" required
+      onfocus="this.min=new Date().toISOString().split('T')[0]; this.max=new Date(Date.now()+30*24*60*60*1000).toISOString().split('T')[0];">
     <small id="diaSemanaTexto"></small>
+
     <label for="hora">Hora</label>
     <select id="hora" name="Hora" required>
       <option value="">Selecciona una hora...</option>
     </select>
     <small id="horaError"></small>
+
     <label for="comentarios">Comentarios adicionales</label>
     <textarea id="comentarios" name="Comentarios adicionales"></textarea>
+
     <input type="hidden" id="fechaEnvio" name="Fecha y hora de envío">
+
     <button type="submit">Agendar cita</button>
-    <button type="button" id="consultarRegistros">🧪 Consultar todos los registros</button>
-    <button type="button" onclick="probarConsultaGeneral()">🧪 MiniTester: Consultar hoja</button>
+    <button type="button" id="consultarRegistros">🧪 Consultar registros</button>
     <div id="mensajeError" class="error"></div>
   </form>
 
   <script>
+    // Endpoint Google Apps Script
     const scriptURL = 'https://script.google.com/macros/s/AKfycby6B1XyYz0pwANd5RBzJSOqWj-UUxjl5ZGWeFfr8Ckudy48dtsJFFU_qeJTMv5VwnE/exec';
 
-    // Valida campos de formulario y controles de fecha
-    function validarFormulario(e) {
-      const formError = document.getElementById('mensajeError');
-      formError.textContent = '';
+    // Función para validar fecha: no pasadas, sólo lunes a viernes
+    function validarFecha() {
+      const errorDiv = document.getElementById('mensajeError');
+      errorDiv.textContent = '';
       const fechaEl = document.getElementById('fecha');
-      const fechaVal = fechaEl.value;
-      const hoy = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
-      const sel = new Date(fechaVal + 'T00:00:00-06:00');
+      const valor = fechaEl.value;
+      if (!valor) return false;
+      const hoy = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Mexico_City'}));
+      const sel = new Date(valor + 'T00:00:00-06:00');
       if (sel < new Date(hoy.toDateString())) {
-        formError.textContent = '❌ No puedes agendar citas en fechas pasadas.';
-        fechaEl.style.borderColor = 'red'; return false;
+        errorDiv.textContent = '❌ No puedes agendar citas en fechas pasadas.';
+        return false;
       }
-      const diaNom = sel.toLocaleDateString('es-MX',{weekday:'long',timeZone:'America/Mexico_City'});
-      if (['sábado','domingo'].includes(diaNom)) {
-        formError.textContent = '❌ Las citas solo se pueden agendar de lunes a viernes.';
-        fechaEl.style.borderColor = 'red'; return false;
+      const dia = sel.toLocaleDateString('es-MX',{weekday:'long',timeZone:'America/Mexico_City'});
+      if (['sábado','domingo'].includes(dia)) {
+        errorDiv.textContent = '❌ Sólo de lunes a viernes.';
+        return false;
       }
       return true;
     }
 
-    // Consulta todos los registros y los muestra en una tabla
-    function probarConsultaGeneral() {
-      fetch(scriptURL + '?test=all')
-        .then(res => res.ok ? res.json() : Promise.reject('Error servidor'))
-        .then(data => {
-          const table = document.createElement('table');
-          table.innerHTML = '<thead><tr>' + data[0].map(h=>`<th>${h}</th>`).join('') + '</tr></thead>';
-          const tbody = document.createElement('tbody');
-          data.slice(1).forEach(row => {
-            const tr = document.createElement('tr');
-            row.forEach((col, i) => {
-              const td = document.createElement('td');
-              const hdr = data[0][i];
-              if (hdr==='Fecha y hora de envío' && col) td.textContent = new Date(col).toLocaleString('es-MX',{timeZone:'America/Mexico_City'});
-              else if (hdr==='Hora'&&col) td.textContent = col.substr(0,5);
-              else td.textContent = col;
-              tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
-          });
-          table.appendChild(tbody);
-          const ex = document.getElementById('tablaDatos'); if(ex) ex.remove();
-          const div = document.createElement('div'); div.id='tablaDatos'; div.appendChild(table);
-          document.getElementById('formulario').appendChild(div);
-        })
-        .catch(err=> document.getElementById('mensajeError').textContent = '❌ '+err);
-    }
-
-    // Actualiza opciones de horario excluyendo ocupados
+    // Actualiza horarios disponibles
     function actualizarHorariosDisponibles() {
       const esp = document.getElementById('especialidad').value;
       const fecha = document.getElementById('fecha').value;
-      const sel = document.getElementById('hora');
-      if (!esp||!fecha) return;
+      const horaSel = document.getElementById('hora');
+      if (!esp || !fecha) return;
       fetch(`${scriptURL}?fecha=${fecha}&especialidad=${encodeURIComponent(esp)}`)
-        .then(r=>r.json()).then(ocup=>{
-          sel.innerHTML='';
-          const opts = [];
-          for(let h=9;h<=17;h++){opts.push(`${h.toString().padStart(2,'0')}:00`,`${h.toString().padStart(2,'0')}:30`);}          
-          const disp = opts.filter(h=>!ocup.includes(h));
-          if(!disp.length){sel.innerHTML='<option>No hay horarios disponibles</option>';}
-          else disp.forEach(h=>sel.appendChild(new Option(h,h)));
-        }).catch(e=>document.getElementById('mensajeError').textContent='❌ '+e);
+        .then(res => res.json())
+        .then(ocup => {
+          // Generar intervalos de 30m entre 09:00 y 17:30
+          const opciones = [];
+          for (let h = 9; h < 18; h++) {
+            opciones.push(`${String(h).padStart(2,'0')}:00`);
+            opciones.push(`${String(h).padStart(2,'0')}:30`);
+          }
+          // Limpiar select
+          horaSel.innerHTML = '';
+          const disponibles = opciones.filter(h => !ocup.includes(h));
+          if (disponibles.length === 0) {
+            horaSel.innerHTML = '<option>No hay horarios disponibles</option>';
+          } else {
+            disponibles.forEach(h => {
+              const opt = document.createElement('option');
+              opt.value = h; opt.textContent = h;
+              horaSel.appendChild(opt);
+            });
+          }
+        })
+        .catch(err => document.getElementById('mensajeError').textContent = '❌ ' + err);
     }
 
-    document.addEventListener('DOMContentLoaded',()=>{
+    // Enviar formulario
+    document.getElementById('formulario').addEventListener('submit', e => {
+      e.preventDefault();
+      document.getElementById('mensajeError').textContent = '';
+      if (!validarFecha()) return;
+      const form = e.target;
       actualizarHorariosDisponibles();
-      document.getElementById('especialidad').addEventListener('change',()=>{ actualizarHorariosDisponibles(); });
-      document.getElementById('fecha').addEventListener('change',()=>{ actualizarHorariosDisponibles(); });
-      document.getElementById('consultarRegistros').addEventListener('click',probarConsultaGeneral);
-      document.getElementById('formulario').addEventListener('submit',e=>{
-        e.preventDefault();
-        if(!validarFormulario(e)) return;
-        const btn = e.target.querySelector('button[type="submit"]'); btn.disabled=true;
-        const data = new FormData(e.target);
-        fetch(scriptURL,{method:'POST',body:data})
-          .then(r=>r.text()).then(res=>{
-            btn.disabled=false;
-            if(res==='success'){e.target.reset(); actualizarHorariosDisponibles();} 
-            else document.getElementById('mensajeError').textContent='❌ '+res;
-          }).catch(err=>document.getElementById('mensajeError').textContent='❌ '+err);
-      });
+      const data = new FormData(form);
+      fetch(scriptURL, { method: 'POST', body: data })
+        .then(r => r.text())
+        .then(res => {
+          if (res === 'success') {
+            form.reset();
+            actualizarHorariosDisponibles();
+          } else if (res === 'duplicate') {
+            document.getElementById('mensajeError').textContent = '❌ Cita duplicada.';
+          } else {
+            document.getElementById('mensajeError').textContent = '❌ ' + res;
+          }
+        })
+        .catch(err => document.getElementById('mensajeError').textContent = '❌ ' + err);
     });
+
+    // Botón para consultar registros (solo consola)
+    document.getElementById('consultarRegistros').addEventListener('click', () => {
+      fetch(scriptURL + '?test=all')
+        .then(r => r.json())
+        .then(data => console.log(data))
+        .catch(err => console.error(err));
+    });
+
+    // Actualizar horarios al cambiar especialidad o fecha
+    document.getElementById('especialidad').addEventListener('change', actualizarHorariosDisponibles);
+    document.getElementById('fecha').addEventListener('change', actualizarHorariosDisponibles);
+
+    // Inicializar al cargar
+    window.addEventListener('DOMContentLoaded', actualizarHorariosDisponibles);
   </script>
 </body>
 </html>
