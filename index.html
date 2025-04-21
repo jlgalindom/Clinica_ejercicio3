@@ -270,7 +270,7 @@
 
       campoFecha.addEventListener('change', () => {
         const [y, m, d] = campoFecha.value.split('-');
-        const fechaSeleccionada = new Date(Number(y), Number(m), Number(d));
+        const fechaSeleccionada = new Date(Number(y), Number(m) + 1, Number(d));
         const hoy = new Date(); hoy.setHours(0,0,0,0);
         const domingo = fechaSeleccionada.getDay() === 0;
 
