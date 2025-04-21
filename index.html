@@ -170,7 +170,7 @@ if (!telefonoValido) {
     }
 
     function probarConsultaGeneral() {
-      const url = 'https://script.google.com/macros/s/AKfycbx0-FmyuOy8uRBSZCn8NCUEU1zADJpGNXGUu_bhCDHcmr52bU63dI8FRHglpl1-cFw/exec?test=all';
+      const url = 'https://script.google.com/macros/s/AKfycby6B1XyYz0pwANd5RBzJSOqWj-UUxjl5ZGWeFfr8Ckudy48dtsJFFU_qeJTMv5VwnE/exec?test=all';
       fetch(url)
         .then(res => {
           if (!res.ok) throw new Error('Respuesta no válida del servidor');
@@ -232,7 +232,7 @@ if (!telefonoValido) {
       const horaSelect = document.getElementById('hora');
       if (!especialidad || !fecha) return;
 
-      const url = `https://script.google.com/macros/s/AKfycbzDauXFxNzgy-rztoyWhkGWNeYWdxSb6746BHavRCm9E25Jc_YpvD2DKssD6nFwEaM/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
+      const url = `https://script.google.com/macros/s/AKfycby6B1XyYz0pwANd5RBzJSOqWj-UUxjl5ZGWeFfr8Ckudy48dtsJFFU_qeJTMv5VwnE/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
       console.log('URL consultada para horarios:', url);
           const visorURL = document.createElement('div');
           visorURL.textContent = url;
@@ -316,7 +316,7 @@ if (!telefonoValido) {
     if (!validarFormulario(event)) return;
     const form = event.target;
     const formData = new FormData(form);
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzDauXFxNzgy-rztoyWhkGWNeYWdxSb6746BHavRCm9E25Jc_YpvD2DKssD6nFwEaM/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby6B1XyYz0pwANd5RBzJSOqWj-UUxjl5ZGWeFfr8Ckudy48dtsJFFU_qeJTMv5VwnE/exec';
     const submitButton = form.querySelector('button[type="submit"]');
     const consultaButton = document.getElementById('consultarRegistros');
     consultaButton.style.display = 'none';
