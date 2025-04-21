@@ -96,7 +96,8 @@
     <button type="submit">Agendar cita</button>
     <button type="button" id="consultarRegistros">🧪 Consultar todos los registros</button>
     <div id="mensajeError" style="color: red; font-weight: bold; margin-top: 1rem;"></div>
-  </form>
+  <button type="button" onclick="probarConsultaGeneral()">🧪 MiniTester: Consultar hoja</button>
+</form>
 
   <script>
     function validarFormulario(event) {
@@ -169,7 +170,7 @@ if (!telefonoValido) {
     }
 
     function probarConsultaGeneral() {
-      const url = 'https://script.google.com/macros/s/AKfycbwU0ydXWV6m-4rjKca6p9NiiHwO6u0phvwpuGTVdKx-fa6Lh0uQw18mc7pqj27Qne8/exec?test=all';
+      const url = 'https://script.google.com/macros/s/AKfycbx0-FmyuOy8uRBSZCn8NCUEU1zADJpGNXGUu_bhCDHcmr52bU63dI8FRHglpl1-cFw/exec?test=all';
       fetch(url)
         .then(res => {
           if (!res.ok) throw new Error('Respuesta no válida del servidor');
@@ -231,7 +232,7 @@ if (!telefonoValido) {
       const horaSelect = document.getElementById('hora');
       if (!especialidad || !fecha) return;
 
-      const url = `https://script.google.com/macros/s/AKfycbzgyxz6HI3Tm1moZRhbQb7YZcMGm3AoEU9JstApvYf10q6e23pLNUNrS6-U-uXHJEY/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
+      const url = `https://script.google.com/macros/s/AKfycbzDauXFxNzgy-rztoyWhkGWNeYWdxSb6746BHavRCm9E25Jc_YpvD2DKssD6nFwEaM/exec?fecha=${fecha}&especialidad=${encodeURIComponent(especialidad)}`;
       console.log('URL consultada para horarios:', url);
           const visorURL = document.createElement('div');
           visorURL.textContent = url;
@@ -315,7 +316,7 @@ if (!telefonoValido) {
     if (!validarFormulario(event)) return;
     const form = event.target;
     const formData = new FormData(form);
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwzm4j3g4rDRYA14w9YMc4PkjNV1F-8h6YD_e3fimwSaxPCQwAz0SFVzNQ811YEenY/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzDauXFxNzgy-rztoyWhkGWNeYWdxSb6746BHavRCm9E25Jc_YpvD2DKssD6nFwEaM/exec';
     const submitButton = form.querySelector('button[type="submit"]');
     const consultaButton = document.getElementById('consultarRegistros');
     consultaButton.style.display = 'none';
