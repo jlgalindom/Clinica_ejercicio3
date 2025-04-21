@@ -171,7 +171,7 @@
 
     <div class="card">
       <h2>Registros de citas</h2>
-      <button onclick="mostrarPopupCitas()">📋 Consultar registros actuales</button>
+      <button onclick="mostrarPopupCitas()" style="margin-top: 1.5rem; padding: 0.75rem 1.5rem; background-color: #d27b9c; border: none; color: white; font-size: 1rem; border-radius: 8px; cursor: pointer;">📋 Consultar registros actuales</button>
       <div id="popupCitas" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.2); padding:1rem; z-index:1000; max-width:90vw; max-height:70vh; overflow:auto;">
         <button onclick="document.getElementById('popupCitas').style.display='none'" style="float:right; background:red; color:white; border:none; padding:0.5rem; border-radius:6px;">✖ Cerrar</button>
         <div id="tablaCitas"></div>
@@ -183,7 +183,7 @@
           container.innerHTML = "<em>Cargando...</em>";
           document.getElementById("popupCitas").style.display = "block";
           try {
-            const res = await fetch("https://script.google.com/macros/s/AKfycbxYBkXte5ySSEuGlZA4GK3De-B_KoNWMPXC4TKBC5Q9wsovr21RpBoG8wsBdkQWnCU/exec?test=all");
+            const res = await fetch("https://script.google.com/macros/s/AKfycbx0tRY4Uv_NsSeccdujqcRI_X49GDMWX9MpF-Jasq8j7BHzabpIYl4ZMUbn2ZJyWBE/exec?test=all");
             const data = await res.json();
             if (!data || !Array.isArray(data) || data.length < 2) {
               container.innerHTML = "<p>No hay registros disponibles.</p>";
@@ -243,7 +243,7 @@
           const now = new Date().toLocaleString();
           document.getElementById('timestamp').value = now;
           const formData = new FormData(form);
-          const scriptURL = 'https://script.google.com/macros/s/AKfycbxYBkXte5ySSEuGlZA4GK3De-B_KoNWMPXC4TKBC5Q9wsovr21RpBoG8wsBdkQWnCU/exec';
+          const scriptURL = 'https://script.google.com/macros/s/AKfycbx0tRY4Uv_NsSeccdujqcRI_X49GDMWX9MpF-Jasq8j7BHzabpIYl4ZMUbn2ZJyWBE/exec';
 
           try {
             const response = await fetch(scriptURL, { method: 'POST', body: formData });
@@ -254,8 +254,11 @@
             }
             document.getElementById('mensajeExito').style.display = 'block';
             form.reset();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => document.getElementById('mensajeExito').style.display = 'none', 5000);
+            setTimeout(() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              document.getElementById('mensajeExito').style.display = 'none';
+            }, 3000);
+            
             if (typeof drawChart === 'function') drawChart();
           } catch (error) {
             alert('Error al enviar. Intenta nuevamente.');
