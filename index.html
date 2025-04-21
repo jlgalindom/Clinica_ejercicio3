@@ -306,7 +306,7 @@
         formElement.addEventListener('submit', async (e) => {
           e.preventDefault();
           const form = e.target;
-          const now = new Date().toLocaleString();
+          const now = new Date().toLocaleString('sv-SE', { timeZone: 'America/Mexico_City' }).replace(' ', 'T');
           document.getElementById('timestamp').value = now;
           const formData = new FormData(form);
           const scriptURL = 'https://script.google.com/macros/s/AKfycbx0tRY4Uv_NsSeccdujqcRI_X49GDMWX9MpF-Jasq8j7BHzabpIYl4ZMUbn2ZJyWBE/exec';
