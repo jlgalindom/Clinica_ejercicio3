@@ -1,200 +1,267 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Clínica Gineco-Pediátrica</title>
-  <!-- Favicon para evitar 404 -->
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <style>
-    body { font-family: sans-serif; background-color: #fff8fa; margin: 0; padding: 1rem; }
-    h1 { text-align: center; color: #c94f7c; }
-    form { max-width: 600px; margin: auto; padding: 1rem; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); background: white; }
-    label { display: block; margin-top: 1rem; }
-    input, select, textarea, button { width: 100%; padding: 0.5rem; margin-top: 0.5rem; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-    button { margin-top: 1rem; background-color: #c94f7c; color: white; font-weight: bold; cursor: pointer; }
-    small { display: block; margin-top: 4px; font-weight: normal; color: #666; }
-    .error { color: red; font-weight: bold; margin-top: 1rem; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #fefefe;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 1rem 0;
+      background-color: #fde7f0;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #b74b7f;
+    }
+    .container {
+      padding: 1rem;
+      max-width: 900px;
+      margin: auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+    .accordion-button {
+      background-color: #f3d9e3;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 1rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      padding: 0 1rem;
+      background-color: #fff4fa;
+      border-radius: 0 0 8px 8px;
+    }
+    .accordion-content.open {
+      padding: 0.5rem 1rem;
+    }
+    form label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    form input, form select, form textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    form button {
+      margin-top: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #d27b9c;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .success-message {
+      margin-top: 1rem;
+      color: green;
+      font-weight: bold;
+      display: none;
+    }
+    #chart-container {
+      height: 400px;
+      margin-top: 2rem;
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 1.5rem; }
+    }
   </style>
 </head>
 <body>
-  <h1>Clínica Gineco-Pediátrica</h1>
-  <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada" style="display:block; margin:1rem auto; max-width:100%; border-radius:8px;">
+  <header>
+    <h1>Clínica Gineco-Pediátrica</h1>
+    <img src="https://github.com/Per-Arredondo/ejercicio_clinica.v2/blob/main/portada.png?raw=true" alt="Portada Clínica" style="width:100%; max-width:600px; border-radius:12px;">
+  </header>
 
-  <form id="formulario">
-    <label for="nombre">Nombre completo</label>
-    <input id="nombre" name="Nombre completo" required>
+  <div class="container">
 
-    <label for="telefono">Teléfono</label>
-    <input id="telefono" name="Teléfono" required>
+    <div class="card">
+      <h2>Especialidades Médicas</h2>
 
-    <label for="correo">Correo electrónico</label>
-    <input id="correo" name="Correo electrónico" type="email" required>
+      <button class="accordion-button">👩‍⚕️ Ginecología</button>
+      <div class="accordion-content">
+        Salud reproductiva, planificación familiar, anticoncepción, estudios Papanicolaou, chequeos ginecológicos.
+      </div>
 
-    <label for="sexo">Sexo</label>
-    <select id="sexo" name="Sexo" required>
-      <option value="Femenino">Femenino</option>
-      <option value="Masculino">Masculino</option>
-      <option value="Otro">Otro</option>
-    </select>
+      <button class="accordion-button">🧐 Obstetricia</button>
+      <div class="accordion-content">
+        Control prenatal, ultrasonidos, educación perinatal, atención en embarazo de bajo y alto riesgo.
+      </div>
 
-    <label for="especialidad">Especialidad</label>
-    <select id="especialidad" name="Especialidad" required>
-      <option value="Ginecología">Ginecología</option>
-      <option value="Obstetricia">Obstetricia</option>
-      <option value="Pediatría">Pediatría</option>
-      <option value="Medicina General">Medicina General</option>
-    </select>
+      <button class="accordion-button">👶 Pediatría</button>
+      <div class="accordion-content">
+        Control del desarrollo infantil, vacunas, revisiones, prevención de enfermedades y orientación para madres/padres.
+      </div>
 
-    <label for="fecha">Fecha</label>
-    <input id="fecha" name="Fecha" type="date" required
-      onfocus="this.min=new Date().toISOString().split('T')[0]; this.max=new Date(Date.now()+30*24*60*60*1000).toISOString().split('T')[0];">
-    <small id="diaSemanaTexto"></small>
+      <button class="accordion-button">🩺 Medicina General</button>
+      <div class="accordion-content">
+        Valoración inicial, seguimiento a condiciones generales de salud, chequeos básicos y canalización a especialidades.
+      </div>
+    </div>
 
-    <label for="hora">Hora</label>
-    <select id="hora" name="Hora" required>
-      <option value="">Selecciona una hora...</option>
-    </select>
-    <small id="horaError"></small>
+    <div class="card">
+      <h2>Agenda tu cita</h2>
+      <form id="formulario">
+        <label>Nombre completo</label>
+        <input name="Nombre completo" required />
 
-    <label for="comentarios">Comentarios adicionales</label>
-    <textarea id="comentarios" name="Comentarios adicionales"></textarea>
+        <label>Teléfono</label>
+        <input name="Teléfono" required />
 
-    <input type="hidden" id="fechaEnvio" name="Fecha y hora de envío">
+        <label>Correo electrónico</label>
+        <input name="Correo electrónico" type="email" required />
 
-    <button type="submit">Agendar cita</button>
-    <button type="button" id="consultarRegistros">🧪 Consultar registros</button>
-    <div id="mensajeError" class="error"></div>
-  </form>
+        <label>Sexo</label>
+        <select name="Sexo" required>
+          <option value="">Selecciona una opción</option>
+          <option>Femenino</option>
+          <option>Masculino</option>
+          <option>Otro</option>
+        </select>
 
-  <!-- Contenedor dinámico para mostrar la tabla -->
-  <div id="tablaContainer" style="max-width: 600px; margin: 1rem auto;"></div>
+        <label>Especialidad</label>
+        <select name="Especialidad" required>
+          <option value="">Selecciona una especialidad</option>
+          <option>Ginecología</option>
+          <option>Obstetricia</option>
+          <option>Pediatría</option>
+          <option>Medicina General</option>
+        </select>
+
+        <label>Fecha</label>
+        <input name="Fecha" type="date" required />
+
+        <label>Hora</label>
+        <input name="Hora" type="time" required />
+
+        <label>Comentarios adicionales</label>
+        <textarea name="Comentarios adicionales"></textarea>
+
+        <input type="hidden" name="Fecha y hora de envío" id="timestamp"/>
+
+        <button type="submit">Agendar cita</button>
+        <div class="success-message" id="mensajeExito">👍 Gracias, tu cita ha sido agendada. ⏳ Redirigiendo al inicio... 🎉 Te contactaremos pronto.</div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Registros de citas</h2>
+      <button onclick="mostrarPopupCitas()">📋 Consultar registros actuales</button>
+      <div id="popupCitas" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.2); padding:1rem; z-index:1000; max-width:90vw; max-height:70vh; overflow:auto;">
+        <button onclick="document.getElementById('popupCitas').style.display='none'" style="float:right; background:red; color:white; border:none; padding:0.5rem; border-radius:6px;">✖ Cerrar</button>
+        <div id="tablaCitas"></div>
+      </div>
+
+      <script>
+        async function mostrarPopupCitas() {
+          const container = document.getElementById("tablaCitas");
+          container.innerHTML = "<em>Cargando...</em>";
+          document.getElementById("popupCitas").style.display = "block";
+          try {
+            const res = await fetch("https://script.google.com/macros/s/AKfycbxYBkXte5ySSEuGlZA4GK3De-B_KoNWMPXC4TKBC5Q9wsovr21RpBoG8wsBdkQWnCU/exec?test=all");
+            const data = await res.json();
+            if (!data || !Array.isArray(data) || data.length < 2) {
+              container.innerHTML = "<p>No hay registros disponibles.</p>";
+              return;
+            }
+            const table = document.createElement("table");
+            table.style.width = "100%";
+            table.style.borderCollapse = "collapse";
+            table.innerHTML = "<thead><tr>" + data[0].map(h => `<th style='border:1px solid #ccc;padding:4px;background:#eee;'>${h}</th>`).join('') + "</tr></thead>";
+            const tbody = document.createElement("tbody");
+            data.slice(1).forEach(row => {
+              const tr = document.createElement("tr");
+              row.forEach(cell => {
+                const td = document.createElement("td");
+                td.textContent = cell;
+                td.style.border = "1px solid #ccc";
+                td.style.padding = "4px";
+                tr.appendChild(td);
+              });
+              tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+            container.innerHTML = "";
+            container.appendChild(table);
+          } catch (err) {
+            container.innerHTML = `<p style='color:red;'>Error al cargar registros.</p>`;
+          }
+        }
+      </script>
+
+      
+      <h2>Estadísticas de Citas (Próximamente)</h2>
+      <!-- Aquí puede ir el gráfico dinámico conectado -->
+    </div>
+  </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxYBkXte5ySSEuGlZA4GK3De-B_KoNWMPXC4TKBC5Q9wsovr21RpBoG8wsBdkQWnCU/exec';
-
-    function initFecha() {
-      const fechaEl = document.getElementById('fecha');
-      const hoy = new Date().toISOString().split('T')[0];
-      fechaEl.value = hoy;
-      document.getElementById('diaSemanaTexto').textContent = '';
-    }
-
-    function validarFecha() {
-      const errorDiv = document.getElementById('mensajeError');
-      errorDiv.textContent = '';
-      const fechaEl = document.getElementById('fecha');
-      const valor = fechaEl.value;
-      const hoy = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Mexico_City'}));
-      const sel = new Date(valor + 'T00:00:00-06:00');
-      if (sel < new Date(hoy.toDateString())) {
-        errorDiv.textContent = '❌ No puedes agendar citas en fechas pasadas.';
-        return false;
-      }
-      const dia = sel.toLocaleDateString('es-MX',{weekday:'long',timeZone:'America/Mexico_City'});
-      document.getElementById('diaSemanaTexto').textContent = dia;
-      if (['sábado','domingo'].includes(dia)) {
-        errorDiv.textContent = '❌ Sólo de lunes a viernes.';
-        return false;
-      }
-      return true;
-    }
-
-    function actualizarHorariosDisponibles() {
-      const esp = document.getElementById('especialidad').value;
-      const fecha = document.getElementById('fecha').value;
-      const horaSel = document.getElementById('hora');
-      if (!esp || !fecha) return;
-      console.log('Consultando horarios para', esp, fecha);
-      fetch(`${scriptURL}?fecha=${fecha}&especialidad=${encodeURIComponent(esp)}`)
-        .then(res => res.json())
-        .then(ocup => {
-          console.log('Horarios ocupados:', ocup);
-          const opciones = [];
-          for (let h = 9; h < 18; h++) {
-            opciones.push(`${String(h).padStart(2,'0')}:00`);
-            opciones.push(`${String(h).padStart(2,'0')}:30`);
-          }
-          horaSel.innerHTML = '';
-          const disponibles = opciones.filter(h => !ocup.includes(h));
-          if (disponibles.length === 0) {
-            horaSel.innerHTML = '<option>No hay horarios disponibles</option>';
-          } else {
-            disponibles.forEach(h => {
-              const opt = document.createElement('option');
-              opt.value = h; opt.textContent = h;
-              horaSel.appendChild(opt);
-            });
-          }
-        })
-        .catch(err => document.getElementById('mensajeError').textContent = '❌ ' + err);
-    }
-
-    document.getElementById('formulario').addEventListener('submit', e => {
-      e.preventDefault();
-      document.getElementById('mensajeError').textContent = '';
-      if (!validarFecha()) return;
-      const form = e.target;
-      const data = new FormData(form);
-      fetch(scriptURL, { method: 'POST', body: data })
-        .then(r => r.text())
-        .then(res => {
-          console.log('Respuesta POST:', res);
-          if (res === 'success') {
-            form.reset();
-            initFecha();
-            actualizarHorariosDisponibles();
-          } else if (res === 'duplicate') {
-            document.getElementById('mensajeError').textContent = '❌ Cita duplicada.';
-          } else {
-            document.getElementById('mensajeError').textContent = '❌ ' + res;
-          }
-        })
-        .catch(err => document.getElementById('mensajeError').textContent = '❌ ' + err);
-    });
-
-    document.getElementById('consultarRegistros').addEventListener('click', () => {
-      fetch(scriptURL + '?test=all')
-        .then(r => r.json())
-        .then(data => {
-          const existing = document.getElementById('tablaRegistros');
-          if (existing) existing.remove();
-          const table = document.createElement('table');
-          table.id = 'tablaRegistros';
-          table.style.marginTop = '1rem';
-          const thead = document.createElement('thead');
-          const headerRow = document.createElement('tr');
-          data[0].forEach(hdr => {
-            const th = document.createElement('th');
-            th.textContent = hdr;
-            headerRow.appendChild(th);
-          });
-          thead.appendChild(headerRow);
-          table.appendChild(thead);
-          const tbody = document.createElement('tbody');
-          data.slice(1).forEach(row => {
-            const tr = document.createElement('tr');
-            row.forEach((col, idx) => {
-              const td = document.createElement('td');
-              td.textContent = col;
-              tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
-          });
-          table.appendChild(tbody);
-          document.getElementById('tablaContainer').appendChild(table);
-        })
-        .catch(err => {
-          console.error(err);
-          document.getElementById('mensajeError').textContent = '❌ Error al consultar registros.';
-        });
-    });
-
     window.addEventListener('DOMContentLoaded', () => {
-      initFecha();
-      actualizarHorariosDisponibles();
-      document.getElementById('especialidad').addEventListener('change', actualizarHorariosDisponibles);
-      document.getElementById('fecha').addEventListener('change', () => { initFecha(); actualizarHorariosDisponibles(); });
+      const accordionButtons = document.querySelectorAll('.accordion-button');
+      accordionButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const panel = btn.nextElementSibling;
+          panel.classList.toggle('open');
+          if (panel.style.maxHeight) {
+            panel.style.maxHeight = null;
+          } else {
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+          }
+        });
+      });
+
+      const formElement = document.getElementById('formulario');
+      if (formElement) {
+        formElement.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const now = new Date().toLocaleString();
+          document.getElementById('timestamp').value = now;
+          const formData = new FormData(form);
+          const scriptURL = 'https://script.google.com/macros/s/AKfycbxYBkXte5ySSEuGlZA4GK3De-B_KoNWMPXC4TKBC5Q9wsovr21RpBoG8wsBdkQWnCU/exec';
+
+          try {
+            const response = await fetch(scriptURL, { method: 'POST', body: formData });
+            const result = await response.text();
+            if (result === 'duplicate') {
+              alert('❌ Ya existe una cita registrada con ese nombre, fecha y hora.');
+              return;
+            }
+            document.getElementById('mensajeExito').style.display = 'block';
+            form.reset();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => document.getElementById('mensajeExito').style.display = 'none', 5000);
+            if (typeof drawChart === 'function') drawChart();
+          } catch (error) {
+            alert('Error al enviar. Intenta nuevamente.');
+          }
+        });
+      }
     });
   </script>
 </body>
