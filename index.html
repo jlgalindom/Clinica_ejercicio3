@@ -191,7 +191,17 @@ if (!telefonoValido) {
             row.forEach((col, idx) => {
               const td = document.createElement('td');
               if (data[0][idx] === 'Fecha y hora de envío' && col && !isNaN(Date.parse(col))) {
-  const fechaMX = new Date(col).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+                const fechaMX = new Date(col).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' });
+                td.textContent = fechaMX;
+              } else if (data[0][idx] === 'Hora' && col) {
+                td.textContent = String(col).substring(0, 5);
+              } else {
+                td.textContent = col;
+              }
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
   td.textContent = fechaMX;
 } else if (data[0][idx] === 'Hora' && col) {
   td.textContent = String(col).substring(0, 5);
